@@ -32,7 +32,7 @@ onMounted(() => {
 
   const orbitcontrols = new OrbitControls(camera, canvas);
   orbitcontrols.position0 = camera.position
-  
+
   const boxGeometry = new THREE.BoxGeometry(16, 16, 16, 16, 16, 16)
 
   const uniformData = {
@@ -46,15 +46,25 @@ onMounted(() => {
     uniforms: uniformData,
     vertexShader: `
     uniform float u_time;
+    varying vec3 pos;
     void main() {
       
       vec4 result;
-
+      pos = position;
       result = vec4(position.x, sin(position.z + u_time) + position.y, position.z, 1.0);
       gl_Position = projectionMatrix * modelViewMatrix * result;
     }`,
     fragmentShader: `
-    void main() { gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0); }`
+    uniform float u_time;
+    varying vec3 pos;
+    void main() { 
+      if (pos.x >= 0.0) {
+        gl_FragColor = vec4(abs(sin(u_time)), 1.0, 0.0, 1.0); 
+      } else {
+        gl_FragColor = vec4(abs(sin(u_time)), 0.0, 1.0, 1.0); 
+      }
+      
+    }`
   })
   
   const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial)
