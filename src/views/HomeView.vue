@@ -3,7 +3,7 @@ import HelloWorld from "../components/HelloWorld.vue";
 import { onMounted } from "vue";
 import * as THREE from "three";
 import test from "node:test";
-import { Clock, ShaderMaterial, ShaderMaterialParameters, BufferAttribute, ColorRepresentation, Color, BufferGeometry, SkinnedMesh, Object3D } from "three";
+import { Clock, ShaderMaterial, ShaderMaterialParameters, BufferAttribute, ColorRepresentation, Color, BufferGeometry, SkinnedMesh, Object3D, Mesh, Matrix4 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 // Our Javascript will go here.
 // import Dragon from "../assets/chinese_dragon/scene.gltf"
@@ -23,13 +23,14 @@ onMounted(() => {
   const renderer = new THREE.WebGLRenderer({
     canvas: canvas
   });
-  const light = new THREE.AmbientLight(new THREE.Color(100, 0, 0) ); // soft white light
-  scene.add( light );
-  const backgroundColor: ColorRepresentation = new Color(100, 100, 100)
+  const light = new THREE.AmbientLight(new THREE.Color(100, 0, 0), 0.01); // soft white light
+  scene.add(light);
+  const backgroundColor: ColorRepresentation = new Color(0.9, 0.9, 1)
   renderer.setClearColor(backgroundColor)
   const loader = new GLTFLoader();
 
-  
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+  scene.add(directionalLight);
 
   const clock = new THREE.Clock(true);
 
@@ -74,20 +75,49 @@ onMounted(() => {
     }
   }
   const boxMaterial = new THREE.ShaderMaterial({
+    linewidth: 100,
     uniforms: uniformData,
     vertexShader: vertexShader,
     fragmentShader: fragmentShader
   })
+
+
 
   loader.load(
     'chinese_dragon/scene.gltf',
     (gltf) => {
       gltf.scene.traverse((res: SkinnedMesh) => {
         // gltfGeometry = res.isMe 
-        console.log(res.isMesh)
+        const constantScale = 4
         if (res.isMesh) {
-          const mesh = new THREE.Mesh(res.geometry, boxMaterial);
-          scene.add(mesh)
+          switch (res.name) {// (res.id) {
+            case "Object_4": // plane
+              break;
+            case "Object_9": // tooth
+              // scene.add(new THREE.Mesh(res.geometry, boxMaterial))
+              break;
+            case "Object_10": // stomach
+              // res.geometry.scale()
+              // scene.add(new THREE.Mesh(res.geometry, boxMaterial))
+
+              break;
+            case "Object_11": // body
+              
+              res.geometry.scale(constantScale, constantScale, constantScale)
+              scene.add(new THREE.Mesh(res.geometry, boxMaterial))
+              break;
+            case "Object_12": // eyes
+              break;
+            case "Object_13": // nothing
+              break;
+            case "Object_14": // nothing
+              break;
+          }
+          //if (res.id == 83 || res.id == 84) {
+          //  const mesh = new THREE.Mesh(res.geometry, boxMaterial);
+          //  scene.add(mesh)
+          //}
+
         }
       })
       // called when the resource is loaded
@@ -102,6 +132,27 @@ onMounted(() => {
       console.error('An error happened', error);
     },
   );
+  const size = 1
+  var sphereGeom = new THREE.SphereGeometry(size, 50, 50);
+  var blueMaterial = new THREE.MeshNormalMaterial({ transparent: true, opacity: 0.5 });
+
+  const nSpheres = 500;
+  var sphere = new THREE.InstancedMesh(sphereGeom, blueMaterial, nSpheres)
+  for (var i = 0; i < nSpheres; i++) {
+    const m: Matrix4 = new Matrix4()
+    const universumSize = 160
+    const sphereSize = 2.5
+    m.set(sphereSize, 0, 0, Math.random() * universumSize - universumSize / 2,
+          0, sphereSize, 0, Math.random() * universumSize - universumSize / 2,
+          0, 0, sphereSize, Math.random() * universumSize - universumSize / 2,
+          0, 0, 0, 1);
+    sphere.setMatrixAt(i, m)
+  }
+
+
+  scene.add(sphere)
+
+  var sphere2 = new THREE.Mesh(sphereGeom, boxMaterial)
 
   const boxMesh = new THREE.Mesh(geometry, boxMaterial)
   // scene.add(boxMesh)

@@ -26,7 +26,7 @@ const a = computed(() => {
 
 <template>
   <div class="greetings">
-    HEEE
+    
   </div>
 </template>
 

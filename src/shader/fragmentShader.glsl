@@ -1,10 +1,9 @@
 uniform float u_time;
 varying vec3 pos;
-void main() { 
-    if (pos.x >= 0.0) {
-    gl_FragColor = vec4(abs(sin(u_time)), 0.0, 0.0, 1.0); 
-    } else {
-    gl_FragColor = vec4(abs(sin(u_time)), abs(sin(u_time)), 1.0, 1.0); 
-    }
-    
+void main() {
+    float offset = 0.4;
+    float scale = 0.2;
+    gl_FragColor = vec4(cos(pos), 1.0);
+
+
 }
