@@ -5,5 +5,4 @@ void main() {
     float scale = 0.2;
     gl_FragColor = vec4(cos(pos), 1.0);
 
-
 }

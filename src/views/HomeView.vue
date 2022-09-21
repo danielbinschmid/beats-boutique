@@ -3,15 +3,15 @@ import HelloWorld from "../components/HelloWorld.vue";
 import { onMounted } from "vue";
 import * as THREE from "three";
 import test from "node:test";
-import { Clock, ShaderMaterial, ShaderMaterialParameters, BufferAttribute, ColorRepresentation, Color, BufferGeometry, SkinnedMesh, Object3D, Mesh, Matrix4 } from "three";
+import { Clock, ShaderMaterial, ShaderMaterialParameters, BufferAttribute, ColorRepresentation, Color, BufferGeometry, SkinnedMesh, Object3D, Mesh, Matrix4, Blending } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 // Our Javascript will go here.
 // import Dragon from "../assets/chinese_dragon/scene.gltf"
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import vertexShader from "../shader/vertexShader.glsl?raw";
 import fragmentShader from "../shader/fragmentShader.glsl?raw";
-
-
+import sphereVertex from "../shader/sphere/sphereVertex.glsl?raw";
+import sphereFragment from "../shader/sphere/sphereFragment.glsl?raw";
 
 const a: ShaderMaterialParameters = {}
 onMounted(() => {
@@ -81,6 +81,18 @@ onMounted(() => {
     fragmentShader: fragmentShader
   })
 
+  const sphereUniforms = {
+    u_time: {
+        type: 'f',
+        value: clock.elapsedTime
+      }
+  }
+  const sphereMaterial = new THREE.ShaderMaterial({
+    blending: THREE.SubtractiveBlending,
+    uniforms: sphereUniforms,
+    vertexShader: sphereVertex,
+    fragmentShader: sphereFragment,
+  })
 
 
   loader.load(
@@ -99,7 +111,8 @@ onMounted(() => {
             case "Object_10": // stomach
               // res.geometry.scale()
               // scene.add(new THREE.Mesh(res.geometry, boxMaterial))
-
+              res.geometry.scale(constantScale, constantScale, constantScale)
+              scene.add(new THREE.Mesh(res.geometry, boxMaterial))
               break;
             case "Object_11": // body
               
@@ -137,7 +150,7 @@ onMounted(() => {
   var blueMaterial = new THREE.MeshNormalMaterial({ transparent: true, opacity: 0.5 });
 
   const nSpheres = 500;
-  var sphere = new THREE.InstancedMesh(sphereGeom, blueMaterial, nSpheres)
+  var sphere = new THREE.InstancedMesh(sphereGeom, sphereMaterial, nSpheres)
   for (var i = 0; i < nSpheres; i++) {
     const m: Matrix4 = new Matrix4()
     const universumSize = 160
@@ -147,6 +160,7 @@ onMounted(() => {
           0, 0, sphereSize, Math.random() * universumSize - universumSize / 2,
           0, 0, 0, 1);
     sphere.setMatrixAt(i, m)
+
   }
 
 
@@ -161,6 +175,7 @@ onMounted(() => {
   function animate() {
     if (curRender % nRender == 0) {
       uniformData.u_time.value = clock.getElapsedTime();
+      sphereUniforms.u_time.value = clock.getElapsedTime();
     } else {
 
     }
