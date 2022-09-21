@@ -1,0 +1,11 @@
+Model Information:
+* title:	The chinese dragon
+* source:	https://sketchfab.com/3d-models/the-chinese-dragon-690492dad21b4904a7bbe1ee64475f5a
+* author:	hackerman_den (https://sketchfab.com/hackerman_den)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "The chinese dragon" (https://sketchfab.com/3d-models/the-chinese-dragon-690492dad21b4904a7bbe1ee64475f5a) by hackerman_den (https://sketchfab.com/hackerman_den) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
