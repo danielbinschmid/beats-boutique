@@ -7,12 +7,14 @@ import { Spheres } from "@/canvas/meshes/Spheres";
 
 import { DragonGltf } from "@/canvas/gltf/Dragon";
 import { MeshBase } from "../meshes/MeshBase";
+import { sign } from "crypto";
 
 export class SceneRenderer {
 	_meshes: MeshBase[];
     _renderer: WebGLRenderer;
     _scene: Scene;
     _camera: PerspectiveCamera;
+    _clock;
 
 	constructor() {
 		// initialize
@@ -24,12 +26,14 @@ export class SceneRenderer {
 			0.1,
 			1000
 		);
-        this._camera.position.x += 20;
+
+        this._camera.position.z += 40;
 		const canvas = document.getElementById("canvas");
 		this._renderer = new THREE.WebGLRenderer({
 			canvas: canvas,
 		});
         this._renderer.setSize(window.innerWidth, window.innerHeight);
+        
 
         // background color
         const backgroundColor: ColorRepresentation = new Color(0.9, 0.9, 1);
@@ -47,7 +51,7 @@ export class SceneRenderer {
 
         
         // meshes
-        const clock = new THREE.Clock(true);
+        this._clock = new THREE.Clock(true);
 		const dragon = new DragonGltf();
         
 		dragon.addToScene(this._scene);
@@ -56,13 +60,19 @@ export class SceneRenderer {
         this._meshes.push(spheres);
 		spheres.addToScene(this._scene);
         
+        const spheres2 = new Spheres(true);
+        this._meshes.push(spheres2);
+		spheres2.addToScene(this._scene);
+        
         this.animate(this);
 	}
 	animate(vm: SceneRenderer) {
-        console.log("animate")
         for (const mesh of vm._meshes) {
             mesh.updateFrame();
         }
+        this._camera.position.x += Math.sin(this._clock.getElapsedTime()) / 2;
+        this._camera.position.y += Math.sin(this._clock.getElapsedTime()) / 2;
+        this._camera.lookAt(0.0, 0.0, 0.0)
 
 		requestAnimationFrame(() => {
             this.animate(vm);

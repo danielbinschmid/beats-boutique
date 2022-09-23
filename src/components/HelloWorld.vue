@@ -5,23 +5,20 @@ const probs = defineProps<{
   msg: string;
 }>();
 
-
 onBeforeMount(() => {
-  console.log("before mounted! " + probs.msg)
-})
+  console.log("before mounted! " + probs.msg);
+});
 
 onMounted(() => {
-  console.log("mounted!")
-})
+  console.log("mounted!");
+});
 
-const count = ref(0)
-console.log("hell yeah")
+const count = ref(0);
+console.log("hell yeah");
 const a = computed(() => {
-  console.log("yes")
-  return "a"
-})
-
-
+  console.log("yes");
+  return "a";
+});
 </script>
 
 <template>
@@ -32,8 +29,6 @@ const a = computed(() => {
       <section></section>
       <section></section>
     -->
-    
-
   </div>
 </template>
 
@@ -44,8 +39,7 @@ h1 {
   top: -10px;
 }
 
-
-section{
+section {
   outline: 1px solid red;
   width: 100vw;
   height: 100vh;

@@ -1,5 +1,6 @@
 uniform float u_time;
 varying vec3 pos;
+
 void main() {
     vec4 result;
     pos = position;
