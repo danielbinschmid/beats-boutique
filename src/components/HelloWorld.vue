@@ -26,7 +26,14 @@ const a = computed(() => {
 
 <template>
   <div class="greetings">
+    <!-- 
+      <section></section>
+      <section></section>
+      <section></section>
+      <section></section>
+    -->
     
+
   </div>
 </template>
 
@@ -35,6 +42,13 @@ h1 {
   font-weight: 500;
   font-size: 2.6rem;
   top: -10px;
+}
+
+
+section{
+  outline: 1px solid red;
+  width: 100vw;
+  height: 100vh;
 }
 
 h3 {

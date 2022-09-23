@@ -13,6 +13,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "gsap": "^3.11.1",
     "pinia": "^2.0.21",
     "three": "^0.144.0",
     "three-gltf-loader": "^1.111.0",
