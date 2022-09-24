@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeMount } from "vue";
+import AboutView from "@/views/AboutView.vue";
 
 const probs = defineProps<{
 	msg: string;
@@ -16,12 +17,22 @@ onMounted(() => {
 <template>
 	<div class="greetings">
 		<section id="start1" ></section>
-		<section></section>
-		<section></section>
-		<section></section>
+		<section>
+            
+        </section>
+		<section :name="'scroll section'">
+            <div :style="{center: true}"> </div>
+        </section>
+		<section :name="'Content section'">
+            <div :style="{center: true}"></div>
+        </section>
 		<section id="start2"></section>
-		<section></section>
-		<section></section>
+		<section>
+            
+        </section>
+		<section>
+            
+        </section>
 		<section></section>
 	</div>
 </template>
@@ -34,8 +45,11 @@ h1 {
 }
 
 section {
-	
-	width: 100vw;
+    
+    padding-left: 0px;
+    margin-left: 0px;
+    border: 10px solid red;
+    border-width: 0px;
 	height: 100vh;
 }
 
@@ -49,7 +63,7 @@ h3 {
 	text-align: center;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 0px) {
 	.greetings h1,
 	.greetings h3 {
 		text-align: left;

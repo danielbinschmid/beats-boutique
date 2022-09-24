@@ -47,14 +47,20 @@ export class CameraZoom extends AnimationBase{
 	update(newCur: number) {
 		this._curPos = this._camera.position;
 		if (newCur != this._cur) {
-			this._cur = newCur;
+            if (newCur > 1) {
+                this._cur = 1;
+                this._fixatePos = undefined;
+            } else {
+                this._cur = newCur;
+                this._fixatePos = new Vector3(0, 0, 0);
+            }
+			
 			const zeroVec = new Vector3(0, 0, 0);
 			const direction = zeroVec
 				.add(this._finalTargetPos)
 				.sub(this._startPos)
 				.multiplyScalar(this._cur);
 			this._curTargetPos = direction.add(this._startPos);
-            console.log(newCur);
 		}
 		const zeroVec = new Vector3(0, 0, 0);
 		this.velocity = zeroVec
