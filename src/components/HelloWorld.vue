@@ -23,12 +23,11 @@ const a = computed(() => {
 
 <template>
   <div class="greetings">
-    <!-- 
+
+      <section id="start1"></section>
       <section></section>
       <section></section>
       <section></section>
-      <section></section>
-    -->
   </div>
 </template>
 
