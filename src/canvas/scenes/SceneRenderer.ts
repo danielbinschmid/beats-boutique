@@ -14,6 +14,7 @@ import { Spheres } from "@/canvas/meshes/Spheres";
 
 import { DragonGltf } from "@/canvas/gltf/Dragon";
 import { LettersGltf } from "@/canvas/gltf/ChineseLetters";
+import { Fireflies } from "@/canvas/meshes/Fireflies";
 import { MeshBase } from "../meshes/MeshBase";
 import { CameraZoom } from "@/canvas/animations/CameraZoom";
 import { CameraShift } from "@/canvas/animations/CameraShift";
@@ -103,6 +104,10 @@ export class SceneRenderer {
 		this._meshes.push(spheres2);
 		spheres2.addToScene(this._scene);
 
+        const fireflies = new Fireflies();
+        this._meshes.push(fireflies);
+        fireflies.addToScene(this._scene);
+        
 		this.animate(this);
 	}
 	animate(vm: SceneRenderer) {
