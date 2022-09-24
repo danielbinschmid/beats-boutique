@@ -93,7 +93,6 @@ export class Spheres extends MeshBase {
         const radii = []
         for (var i = 0; i < nRings; i++) {
             radii.push( (badRadius + i * ((goodRadius - badRadius) /nRings)  ) )
-            console.log(radii[i])
         }
         const res = []
         for (var ring = 0; ring < nRings; ring++) {
