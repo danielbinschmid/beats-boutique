@@ -19,9 +19,17 @@ onMounted(() => {});
 			<div :style="{ center: true }"></div>
 		</section>
 		<section :name="'Content section'">
-			<div :style="{ center: true }">
-				Ni Shi Wang := "You are king" Let your vision become reality
-				Made by Daniel Bin Schmid Contact: Mail, LinkedIn, Github
+            <div class="subtitle">
+                (你是王 (nǐ shì wáng) := "You are king")
+            </div>
+            <h2>
+				Let Your Vision Become Reality ~ 
+			</h2>
+            <div class="subtitle">
+				Made by Daniel Bin Schmid
+            </div>
+            <div class="subtitle">
+				Contact: Mail, LinkedIn, Github
 			</div>
 		</section>
 		<section id="start2"></section>
@@ -38,12 +46,24 @@ h1 {
 	top: -10px;
 }
 
+h2 {
+    font-weight: bold;
+    text-align: center;
+}
+
+subtitle {
+    font-size: 0.05rem;
+    text-align: center;
+}
+
 section {
 	padding-left: 0px;
 	margin-left: 0px;
 	border: 10px solid red;
 	border-width: 0px;
 	height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 h3 {
