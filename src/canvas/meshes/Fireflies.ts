@@ -4,6 +4,12 @@ import { InstancedMesh, Matrix4, Scene, Vector3 } from "three";
 import sphereVertex from "@/shader/fire/firefliesVertex.glsl?raw";
 import sphereFragment from "@/shader/fire/firefliesFragment.glsl?raw";
 import { MeshBase } from "./MeshBase";
+
+
+function mod(n, d) {
+    return ((n % d) + d) % d;
+}
+
 export class Fireflies extends MeshBase {
 	_uniforms;
 	_clock;
@@ -88,6 +94,8 @@ export class Fireflies extends MeshBase {
 		this._uniforms.u_time.value = this._clock.getElapsedTime();
 		for (var sphereIdx = 0; sphereIdx < this._nSpheres; sphereIdx++) {
             const pos = this._initialMatrices[sphereIdx].add( new Vector3(0, -0.1, 0));
+            pos.y = mod(pos.y, 100);
+
             const m = new Matrix4();
             m.set(this._size,
 				0,
@@ -96,7 +104,7 @@ export class Fireflies extends MeshBase {
 				0,
 				this._size,
 				0,
-				pos.y,
+				pos.y - 50,
 				0,
 				0,
 				this._size,

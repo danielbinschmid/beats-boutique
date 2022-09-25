@@ -34,6 +34,18 @@ onMounted(() => {
         ease: Linear.easeNone,
         duration: 1
     }, 2);
+
+    /**
+     * Next: Dragon turns to the right
+     * Dragon fireball shoot to the tunnel, fireball explosion, tunnel lights up
+     * Tunnel design
+     * 
+     * Then, camera movement to the dragon's position, then movement through tunnel
+     * 
+     * Arrival at "About Me"
+     * 
+     * Next challenge: Tunnel, dragon and fireball movement
+     */
 });
 </script>
 

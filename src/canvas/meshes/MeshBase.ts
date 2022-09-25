@@ -1,3 +1,4 @@
+import { Scene } from "three";
 
 
 
@@ -10,6 +11,6 @@ export abstract class MeshBase {
     abstract updateFrame();
 
 
-
+    abstract addToScene(scene: Scene);
 
 }

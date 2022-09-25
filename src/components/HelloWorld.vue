@@ -47,6 +47,7 @@ h1 {
 }
 
 h2 {
+
     font-weight: bold;
     text-align: center;
 }
@@ -57,6 +58,7 @@ subtitle {
 }
 
 section {
+    color: black;
 	padding-left: 0px;
 	margin-left: 0px;
 	border: 10px solid red;

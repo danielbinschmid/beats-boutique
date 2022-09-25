@@ -20,6 +20,7 @@ import { CameraZoom } from "@/canvas/animations/CameraZoom";
 import { CameraShift } from "@/canvas/animations/CameraShift";
 import { AnimationBase } from "@/canvas/animations/AnimationBase";
 import { AnimationLine } from "@/canvas/animations/AnimationLine";
+import { Tunnel } from "../meshes/Tunnel";
 export class SceneRenderer {
 	_meshes: MeshBase[];
 	_renderer: WebGLRenderer;
@@ -110,7 +111,11 @@ export class SceneRenderer {
         const fireflies = new Fireflies();
         this._meshes.push(fireflies);
         fireflies.addToScene(this._scene);
-        
+
+        const tunnel = new Tunnel(new Vector3(100, 0, 95), 100, 3 * Math.PI / 2);
+        this._meshes.push(tunnel);
+        tunnel.addToScene(this._scene);
+
 		this.animate(this);
 	}
 	animate(vm: SceneRenderer) {

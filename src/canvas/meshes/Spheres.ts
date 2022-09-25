@@ -14,34 +14,42 @@ export class Spheres extends MeshBase {
     _mesh;
     _horizontal;
     _center: Vector3;
-	constructor(horizontal = false, center=new Vector3(0, 0, 0)) {
+    _parentMaterial;
+	constructor(horizontal = false, center=new Vector3(0, 0, 0), material = undefined) {
         super();
+        this._parentMaterial = material;
         this._center = center;
         this._horizontal =horizontal;
         this._clock = new THREE.Clock(true);
-		const sphereUniforms = {
-			u_time: {
-				type: "f",
-				value: this._clock.elapsedTime,
-			},
-            is_horizontal: {
-                type: "b",
-                value: this._horizontal
-            },
-            center: {
-                type: "vec3",
-                value: this._center
-            }
-		};
-        this._uniforms = sphereUniforms;
 
-		const sphereMaterial = new THREE.ShaderMaterial({
-			blending: THREE.SubtractiveBlending,
-			uniforms: sphereUniforms,
-			vertexShader: sphereVertex,
-			fragmentShader: sphereFragment,
-		});
-        this._material = sphereMaterial;
+        if (material == undefined) {
+            const sphereUniforms = {
+                u_time: {
+                    type: "f",
+                    value: this._clock.elapsedTime,
+                },
+                is_horizontal: {
+                    type: "b",
+                    value: this._horizontal
+                },
+                center: {
+                    type: "vec3",
+                    value: this._center
+                }
+            };
+            this._uniforms = sphereUniforms;
+    
+            const sphereMaterial = new THREE.ShaderMaterial({
+                blending: THREE.SubtractiveBlending,
+                uniforms: sphereUniforms,
+                vertexShader: sphereVertex,
+                fragmentShader: sphereFragment,
+            });
+            this._material = sphereMaterial;
+        } else {
+            this._material = material;
+        }
+		
 
 		const size = 1;
 		var sphereGeom = new THREE.SphereGeometry(size, 50, 50);
@@ -59,7 +67,7 @@ export class Spheres extends MeshBase {
 
         var sphere = new THREE.InstancedMesh(
 			sphereGeom,
-			sphereMaterial,
+			this._material,
 			nSpheres
 		);
 
@@ -85,7 +93,7 @@ export class Spheres extends MeshBase {
         const badRadius =12;
         const goodRadius = 22;
 
-        const nTotalBalls = 60
+        const nTotalBalls = 60;
         
         // we need always the cos and sin from the angle
         // angle between 0 - 360
@@ -115,6 +123,9 @@ export class Spheres extends MeshBase {
     }
 
     updateFrame() {
-        this._uniforms.u_time.value = this._clock.getElapsedTime();
+        if (this._parentMaterial == undefined) {
+            this._uniforms.u_time.value = this._clock.getElapsedTime();
+        }
+        
     }
 }
