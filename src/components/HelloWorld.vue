@@ -6,33 +6,27 @@ const probs = defineProps<{
 	msg: string;
 }>();
 
-onBeforeMount(() => {
-});
+onBeforeMount(() => {});
 
-onMounted(() => {
-});
-
+onMounted(() => {});
 </script>
 
 <template>
 	<div class="greetings">
-		<section id="start1" ></section>
-		<section>
-            
-        </section>
+		<section id="start1"></section>
+		<section></section>
 		<section :name="'scroll section'">
-            <div :style="{center: true}"> </div>
-        </section>
+			<div :style="{ center: true }"></div>
+		</section>
 		<section :name="'Content section'">
-            <div :style="{center: true}"></div>
-        </section>
+			<div :style="{ center: true }">
+				Ni Shi Wang := "You are king" Let your vision become reality
+				Made by Daniel Bin Schmid Contact: Mail, LinkedIn, Github
+			</div>
+		</section>
 		<section id="start2"></section>
-		<section>
-            
-        </section>
-		<section>
-            
-        </section>
+		<section></section>
+		<section></section>
 		<section></section>
 	</div>
 </template>
@@ -45,11 +39,10 @@ h1 {
 }
 
 section {
-    
-    padding-left: 0px;
-    margin-left: 0px;
-    border: 10px solid red;
-    border-width: 0px;
+	padding-left: 0px;
+	margin-left: 0px;
+	border: 10px solid red;
+	border-width: 0px;
 	height: 100vh;
 }
 

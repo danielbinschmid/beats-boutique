@@ -1,10 +1,11 @@
 import * as THREE from "three";
 
 import {
-	Matrix4, Scene,
+	Matrix4, Scene, Vector3,
 } from "three";
 import sphereVertex from "@/shader/sphere/sphereVertex.glsl?raw";
 import sphereFragment from "@/shader/sphere/sphereFragment.glsl?raw";
+
 import { MeshBase } from "./MeshBase";
 export class Spheres extends MeshBase {
     _uniforms;
@@ -12,8 +13,10 @@ export class Spheres extends MeshBase {
     _material;
     _mesh;
     _horizontal;
-	constructor(horizontal = false) {
+    _center: Vector3;
+	constructor(horizontal = false, center=new Vector3(0, 0, 0)) {
         super();
+        this._center = center;
         this._horizontal =horizontal;
         this._clock = new THREE.Clock(true);
 		const sphereUniforms = {
@@ -24,6 +27,10 @@ export class Spheres extends MeshBase {
             is_horizontal: {
                 type: "b",
                 value: this._horizontal
+            },
+            center: {
+                type: "vec3",
+                value: this._center
             }
 		};
         this._uniforms = sphereUniforms;
@@ -75,9 +82,8 @@ export class Spheres extends MeshBase {
     }
 
     _drawPosition(nRings, ballsPerRing, calcBallsPerRing = undefined) {
-        const center = [0, 0, 0];
-        const badRadius =15;
-        const goodRadius = 30;
+        const badRadius =12;
+        const goodRadius = 22;
 
         const nTotalBalls = 60
         

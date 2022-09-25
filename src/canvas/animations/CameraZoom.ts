@@ -28,6 +28,7 @@ export class CameraZoom extends AnimationBase{
 	_startPos: Vector3;
     _camera: Camera;
     _fixatePos: Vector3 | undefined;
+    _fixatePosOrigin: Vector3;
 	/**
 	 * Cur varies between 0.0 and 1.0, 0.0 is start
 	 */
@@ -42,6 +43,7 @@ export class CameraZoom extends AnimationBase{
 		this._curTargetPos = startPos;
         this._camera = camera;
         this._fixatePos = fixatePos;
+        this._fixatePosOrigin = fixatePos;
 	}
 
 	update(newCur: number) {
@@ -52,7 +54,7 @@ export class CameraZoom extends AnimationBase{
                 this._fixatePos = undefined;
             } else {
                 this._cur = newCur;
-                this._fixatePos = new Vector3(0, 0, 0);
+                this._fixatePos = this._fixatePosOrigin;
             }
 			
 			const zeroVec = new Vector3(0, 0, 0);
@@ -71,7 +73,8 @@ export class CameraZoom extends AnimationBase{
 
         this._camera.position.x += this.velocity.x;
         this._camera.position.y += this.velocity.y;
-
+        this._camera.position.z += this.velocity.z;
+         
         if (this._fixatePos != undefined) { this._camera.lookAt(this._fixatePos); }
 	}
 }

@@ -1,7 +1,7 @@
 uniform float u_time;
 varying vec3 pos;
 varying vec3 norm;
-
+varying float rain_pos;
 // A single iteration of Bob Jenkins' One-At-A-Time hashing algorithm.
 uint hash(uint x) {
     x += (x << 10u);
@@ -50,15 +50,21 @@ float random(vec4 v) {
     return floatConstruct(hash(floatBitsToUint(v)));
 }
 
-// TODO: unten breiter, oben dünner
-// unten mehr dunkel, oben mehr hell
-// plus implemtiere Farbvariationen abhängig von randomness
 void main() {
     norm = normal;
-    pos = position;
-    float movement = 0.0;
-    vec3 r = vec3(random(u_time), random(u_time - 1.0), random(u_time - 2.0)) * movement;
-    float m = sin(u_time * position.y* 5.0) * 10.0;
-    vec4 result = instanceMatrix * vec4(position.x + m, position.y * 20.0, position.z, 1.0) + vec4(r.x, r.y, r.z, 0.0); 
+    float widening_factor = min(0.0, position.y - 2.0);
+    widening_factor = (-1.0 * widening_factor);
+    float movement = max(0.0, position.y) * 1.0;
+    movement = movement * 20.0;
+    vec3 r = vec3(0.0, random(vec4(u_time, position)) * movement, 0.0);
+    float m = sin(u_time * position.x * 2.5) * .8;
+    float scaling = 0.5;
+    float stretch = 10.0;
+    vec4 intermediate1 = vec4((position.x + m) * widening_factor, (position.y) * stretch, (position.z + sin(position.y * position.z)), 1.0);
+    intermediate1 = intermediate1 + vec4(r.x, r.y, r.z, 0.0);
+    intermediate1 = intermediate1 * scaling;
+
+    pos = vec3(intermediate1.x, intermediate1.y, intermediate1.z);
+    vec4 result = instanceMatrix * intermediate1;
     gl_Position = projectionMatrix * modelViewMatrix * result;
 }

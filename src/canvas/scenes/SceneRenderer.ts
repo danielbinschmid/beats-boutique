@@ -37,7 +37,7 @@ export class SceneRenderer {
         this._animationLine = new AnimationLine();
 		this._scene = new THREE.Scene();
 		this._camera = new THREE.PerspectiveCamera(
-			75,
+			50,
 			window.innerWidth / window.innerHeight,
 			0.1,
 			1000
@@ -64,43 +64,46 @@ export class SceneRenderer {
 		this._scene.add(directionalLight);
 
         this._camera.position.z += 20;
-		this._camera.position.x -= 20;
-		this._camera.position.y -= 20;
-        this._camera.lookAt(new Vector3(0, 0, 0));
+		this._camera.position.x -= 0;
+		this._camera.position.y -= 10;
+        
 		// orbit control
 		// const orbitcontrols = new OrbitControls(this._camera, canvas);
 		// orbitcontrols.position0 = this._camera.position;
+        const dragonCenter = new Vector3(20, 0, -10);
+        this._camera.lookAt(dragonCenter);
 
 		// Animations
 		const animation = new CameraZoom(
             new Vector3().copy(this._camera.position),
-			new Vector3(40, 0, 20),
+			new Vector3(40, 0, 40),
             this._camera,
-            new Vector3(0, 0, 0)
+            dragonCenter
 		);
 		this._animationLine.addAnimation(animation);
 
         const cameraShift = new CameraShift(
             this._camera,
-            new Vector3(0,0,0),
-            new Vector3(30, 0, 0)
+            dragonCenter,
+            new Vector3(50, 0, 0)
         )
         this._animationLine.addAnimation(cameraShift);
 
 		// meshes
 		this._clock = new THREE.Clock(true);
-        const letters = new LettersGltf(new Vector3(35, 0, -10));
+        const letters = new LettersGltf(new Vector3(50, 10, -20));
         this._meshes.push(letters);
         letters.addToScene(this._scene);
 
-		const dragon = new DragonGltf();
+
+		const dragon = new DragonGltf(dragonCenter);
 		dragon.addToScene(this._scene);
 		this._meshes.push(dragon);
-		const spheres = new Spheres();
+		const spheres = new Spheres(false, dragonCenter);
 		this._meshes.push(spheres);
 		spheres.addToScene(this._scene);
 
-		const spheres2 = new Spheres(true);
+		const spheres2 = new Spheres(true, dragonCenter);
 		this._meshes.push(spheres2);
 		spheres2.addToScene(this._scene);
 

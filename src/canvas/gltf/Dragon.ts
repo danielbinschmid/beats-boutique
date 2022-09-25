@@ -1,6 +1,6 @@
 import { GltfHandler } from "./Handler";
 import * as THREE from "three";
-import { Clock, Scene, ShaderMaterial, SkinnedMesh } from "three";
+import { Clock, Scene, ShaderMaterial, SkinnedMesh, Vector3 } from "three";
 import fragmentShader from "@/shader/dragon/dragonFragment.glsl?raw";
 import vertexShader from "@/shader/dragon/dragonVertex.glsl?raw";
 
@@ -9,10 +9,11 @@ export class DragonGltf extends GltfHandler {
     _clock: Clock;
     _scene: Scene;
     _uniformData;
+    _position: Vector3;
 
-	constructor(material: undefined | ShaderMaterial = undefined) {
+	constructor(position = new Vector3(0, 0, 0), material: undefined | ShaderMaterial = undefined) {
 		super();
-
+        this._position = position;
         this._clock = new THREE.Clock(true);
 		if (material === undefined) {
 			this._initMaterial();
@@ -60,11 +61,13 @@ export class DragonGltf extends GltfHandler {
                 case "Object_10": // stomach
                     // res.geometry.scale()
                     // scene.add(new THREE.Mesh(res.geometry, boxMaterial))
+                    
                     res.geometry.scale(
                         constantScale,
                         constantScale,
                         constantScale
                     );
+                    res.geometry.translate(this._position.x, this._position.y, this._position.z);
                     vm._scene.add(new THREE.Mesh(res.geometry, vm._material));
                     break;
                 case "Object_11": // body
@@ -73,6 +76,7 @@ export class DragonGltf extends GltfHandler {
                         constantScale,
                         constantScale
                     );
+                    res.geometry.translate(this._position.x, this._position.y, this._position.z);
                     vm._scene.add(new THREE.Mesh(res.geometry, vm._material));
                     break;
                 case "Object_12": // eyes

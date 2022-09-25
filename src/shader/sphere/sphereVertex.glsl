@@ -1,5 +1,6 @@
 uniform float u_time;
 uniform bool is_horizontal;
+uniform vec3 center;
 varying vec3 pos;
 varying vec3 norm;
 void main() {
@@ -25,6 +26,7 @@ void main() {
     
     vec3 rotatedPos = vec3(position.x, position.y, position.z);
     result = rotationMatrix * instanceMatrix * vec4(rotatedPos.x, sin(u_time) + rotatedPos.y, rotatedPos.z, 1.0);
+    result = vec4(result.x + center.x, result.y + center.y, result.z + center.z, result.w);
     pos = vec3(result.x,  result.y, result.z);
     gl_Position = projectionMatrix * modelViewMatrix * result;
 }
