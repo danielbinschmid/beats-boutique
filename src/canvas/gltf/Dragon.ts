@@ -41,6 +41,7 @@ export class DragonGltf extends GltfHandler {
 		};
 		this._uniformData = uniformData;
 		const material = new THREE.ShaderMaterial({
+            wireframe: true,
 			uniforms: this._uniformData,
 			vertexShader: vertexShader,
 			fragmentShader: fragmentShader,
@@ -111,28 +112,5 @@ export class DragonGltf extends GltfHandler {
 			vm._meshCallback(res, vm);
 		});
 	}
-}
-
-export class MeshRotation extends DirectAnimationBase {
-    constructor(meshes: Mesh[], rotation: number, start: number, end: number, id: string="MeshRotation") {
-        const trigger: {
-            obj: any,
-            target: any,
-            id: string
-        }[] = [];
-        var i = 0;
-        for (const mesh of meshes) {
-            const target = {
-                y: rotation
-            }
-            trigger.push({
-                obj: mesh.rotation,
-                target: target,
-                id: id + i,
-            })
-            i++;
-        }
-        super(trigger, start, end, id);
-    }
 }
 

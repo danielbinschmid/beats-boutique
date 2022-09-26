@@ -13,7 +13,9 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 import { Spheres } from "@/canvas/meshes/Spheres";
 
-import { DragonGltf, MeshRotation } from "@/canvas/gltf/Dragon";
+import { DragonGltf } from "@/canvas/gltf/Dragon";
+import { MeshRotation } from "@/canvas/animations/MeshRotation";
+import { MeshLookAt } from "@/canvas/animations/MeshLookAt";
 import { LettersGltf } from "@/canvas/gltf/ChineseLetters";
 import { Fireflies } from "@/canvas/meshes/Fireflies";
 import { MeshBase } from "../meshes/MeshBase";
@@ -98,29 +100,7 @@ export class SceneRenderer {
 		this._meshes.push(letters);
 		letters.addToScene(this._scene);
 
-		const dragon = new DragonGltf(
-			dragonCenter,
-			undefined,
-			(mesh: Mesh, meshName: string) => {
-				const rotation = new MeshRotation(
-					[mesh],
-					Math.PI / 2,
-					3,
-					3.5,
-					meshName
-				);
-				const vars: {
-					[name: string]: {
-						start: number;
-						end: number;
-						target: {};
-						obj: {};
-					};
-				} = {};
-				rotation.registerScrollTriggerVars(vars);
-				window.animationRenderer.renderObjs(vars);
-			}
-		);
+		const dragon = new DragonGltf(dragonCenter, undefined, rotateDragon);
 		this._addMesh(dragon);
 		this._addMesh(new Spheres(false, dragonCenter));
 		this._addMesh(new Spheres(true, dragonCenter));
@@ -144,20 +124,22 @@ export class SceneRenderer {
 		};
 
 		// @@@ introduction animation @@@
-		const line1 = new AnimationLine(0, 3, "start_");
+		const line1 = new AnimationLine(0, 2.5, "start_");
 		this._camera.lookAt(dragonCenter);
+        const cameraPos1 = new Vector3(40, 0, 40);
 		const animation = new CameraZoom(
 			new Vector3().copy(this._camera.position),
-			new Vector3(40, 0, 40),
+			cameraPos1,
 			this._camera,
 			dragonCenter
 		);
 		line1.addAnimation(animation, { start: 0, end: 1.5 });
 
+        const textCenter = new Vector3(50, 0, 0);
 		const cameraShift = new CameraShift(
 			this._camera,
 			dragonCenter,
-			new Vector3(50, 0, 0)
+			textCenter
 		);
 		line1.addAnimation(cameraShift, { start: 0.5, end: 2 });
 
@@ -165,9 +147,53 @@ export class SceneRenderer {
 		this._animationLines.push(line1);
 
 		// @@@ Rotate dragon to the right @@@
-		// const dragonRotation = new DragonRotation(dragon, Math.PI / 2, 2, 3);
+		function rotateDragon(mesh: Mesh, meshName: string) {
+			const rotation = new MeshRotation(
+				[mesh],
+				Math.PI / 2,
+				2.5,
+				4.5,
+				meshName
+			);
+			const vars: {
+				[name: string]: {
+					start: number;
+					end: number;
+					target: {};
+					obj: {};
+				};
+			} = {};
+			rotation.registerScrollTriggerVars(vars);
+			window.animationRenderer.renderObjs(vars);
+		}
 
-		// const line2 = new AnimationLine(2, 4, "2_");
+		const tunnelPos = new Vector3(100, 0, 0);
+		const line2 = new AnimationLine(3, 7, "line2");
+        const dragonFocus = new CameraShift(this._camera, textCenter, dragonCenter);
+        line2.addAnimation(dragonFocus, {start: 3, end: 3.5})
+
+		const movement = new CameraZoom(
+			cameraPos1,
+			dragonCenter,
+			this._camera,
+			undefined
+		);
+        const c = 0.5;
+        line2.addAnimation(movement, { start: 3, end: 4});
+        const lookat = new CameraShift(this._camera, dragonCenter, tunnelPos);
+        line2.addAnimation(lookat, { start: 3.6, end: 4});
+
+        line2.registerScrollTriggerVars(this.scrollTriggerVars);
+        this._animationLines.push(line2);
+
+		/**
+		 * Next: Kameraschwenker damit die Blickrichtung zum Portal zeigt und die Position mit dem Drachen übereinstimmt
+		 *
+		 * Idee: Feuerball während der Animation, beobachten wie der Feuerball fliegt
+		 *
+		 * Idee: Ab dem Moment wenn man aus der Sicht des Drachens blickt, ändert sich die Sicht. Man sieht Sterne oder so,
+		 * bzw. ne andere Dimension
+		 */
 	}
 
 	constructor() {
@@ -184,12 +210,6 @@ export class SceneRenderer {
 		for (const line of this._animationLines) {
 			line.update(this.scrollTriggerVars["global"].value);
 		}
-		if (window.animationRenderer._allVars.length > 1) {
-			console.log(
-				window.animationRenderer._allVars[1]["Object_10Object_100"]
-			);
-		}
-
 		requestAnimationFrame(() => {
 			this.animate(vm);
 		});
