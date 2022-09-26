@@ -8,7 +8,8 @@
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "compilerOptions": {
     "paths": { "@/*":["./src/*"] },
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "typeRoots": ["./node_modules/@types", "./src/types"]
   },
   "vueCompilerOptions": {
     "experimentalDisableTemplateSupport": true

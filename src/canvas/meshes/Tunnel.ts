@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-import { Clock, Matrix4, Scene, Vector2, Vector3 } from "three";
+import { Clock, Matrix4, Scene, Vector2, Vector3, Mesh } from "three";
 import sphereVertex from "@/shader/tunnel/sphereVertex.glsl?raw";
 import sphereFragment from "@/shader/tunnel/sphereFragment.glsl?raw";
 

@@ -7,7 +7,7 @@ import {
 	Scene,
 	PerspectiveCamera,
 	Vector3,
-Camera,
+	Camera,
 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
@@ -15,25 +15,28 @@ import { Spheres } from "@/canvas/meshes/Spheres";
 
 import { DragonGltf } from "@/canvas/gltf/Dragon";
 import { MeshBase } from "../meshes/MeshBase";
-import { AnimationBase } from "./AnimationBase"
+import { AnimationBase } from "./AnimationBase";
 
-
-export class CameraZoom extends AnimationBase{
+export class CameraZoom extends AnimationBase {
 	_speed: number;
-	_cur: number;
 	_finalTargetPos: Vector3;
 	_curTargetPos: Vector3;
 	_curPos: Vector3;
 	velocity: Vector3;
 	_startPos: Vector3;
-    _camera: Camera;
-    _fixatePos: Vector3 | undefined;
-    _fixatePosOrigin: Vector3;
+	_camera: Camera;
+	_fixatePos: Vector3 | undefined;
+	_fixatePosOrigin: Vector3;
 	/**
 	 * Cur varies between 0.0 and 1.0, 0.0 is start
 	 */
-	constructor(startPos: Vector3, targetPos: Vector3, camera: Camera, fixatePos=undefined) {
-        super();
+	constructor(
+		startPos: Vector3,
+		targetPos: Vector3,
+		camera: Camera,
+		fixatePos = undefined
+	) {
+		super();
 		this._startPos = startPos;
 		this.velocity = new THREE.Vector3(0, 0, 0);
 		this._speed = 1; // speed = 1 implies direct camera movement to target point, 1/10 means after 10 frames
@@ -41,40 +44,46 @@ export class CameraZoom extends AnimationBase{
 		this._curPos = new Vector3(startPos.x, startPos.y, startPos.z);
 		this._finalTargetPos = targetPos;
 		this._curTargetPos = startPos;
-        this._camera = camera;
-        this._fixatePos = fixatePos;
-        this._fixatePosOrigin = fixatePos;
+		this._camera = camera;
+		this._fixatePos = fixatePos;
+		this._fixatePosOrigin = fixatePos;
 	}
 
-	update(newCur: number) {
+	_update(newCur: number) {
 		this._curPos = this._camera.position;
-		if (newCur != this._cur) {
-            if (newCur > 1) {
-                this._cur = 1;
-                this._fixatePos = undefined;
-            } else {
-                this._cur = newCur;
-                this._fixatePos = this._fixatePosOrigin;
-            }
-			
-			const zeroVec = new Vector3(0, 0, 0);
-			const direction = zeroVec
-				.add(this._finalTargetPos)
-				.sub(this._startPos)
-				.multiplyScalar(this._cur);
-			this._curTargetPos = direction.add(this._startPos);
+		if (newCur > 1) {
+			this._cur = 1;
+			this._fixatePos = undefined;
+		} else {
+			this._cur = newCur;
+			this._fixatePos = this._fixatePosOrigin;
 		}
-		const zeroVec = new Vector3(0, 0, 0);
-		this.velocity = zeroVec
+
+		const direction = new Vector3(0, 0, 0)
+			.add(this._finalTargetPos)
+			.sub(this._startPos)
+			.multiplyScalar(this._cur);
+		this._curTargetPos = direction.add(this._startPos);
+
+
+		this.velocity = new Vector3(0, 0, 0)
 			.add(this._curTargetPos)
 			.sub(this._curPos)
 			.multiplyScalar(this._speed);
 
+		this._camera.position.x += this.velocity.x;
+		this._camera.position.y += this.velocity.y;
+		this._camera.position.z += this.velocity.z;
 
-        this._camera.position.x += this.velocity.x;
-        this._camera.position.y += this.velocity.y;
-        this._camera.position.z += this.velocity.z;
-         
-        if (this._fixatePos != undefined) { this._camera.lookAt(this._fixatePos); }
+		if (this._fixatePos != undefined) {
+			this._camera.lookAt(this._fixatePos);
+		}
+	}
+
+	getInterval(): { start: number; end: number } {
+		return {
+			start: 0,
+			end: 1,
+		};
 	}
 }

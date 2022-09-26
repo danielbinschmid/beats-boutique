@@ -19,7 +19,6 @@ import { AnimationBase } from "./AnimationBase"
 
 
 export class CameraShift extends AnimationBase {
-    _cur: number;
     _directionVec;
     _startVec;
     _camera: Camera;
@@ -33,7 +32,8 @@ export class CameraShift extends AnimationBase {
         this._directionVec = new Vector3(0,0,0).add(endFixation).sub(startFixation);
     }
 
-    update(newCur: number) {
+    _update(newCur: number) {
+
         if (newCur > 1) {
             this._camera.lookAt(this._endFixation);
         } else {
@@ -41,5 +41,12 @@ export class CameraShift extends AnimationBase {
             this._camera.lookAt(fixation);
         }
         
+    }
+
+    getInterval(): { start: number; end: number; } {
+        return {
+            start: 0,
+            end: 1
+        }
     }
 }
