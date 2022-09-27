@@ -36,9 +36,9 @@ export class AnimationLine {
         }
     }
 
-	addAnimation(animation: AnimationBase, animationVars: AnimationVars) {
+	addAnimation(animation: AnimationBase, animationVars: AnimationVars, id_=undefined) {
 		const interval = animation.getInterval();
-        const id = this._id + this._nAnimations;
+        const id = this._id + this._nAnimations + id_;
         this._animations[id] = animation;
         
         this._scrollVars[id] = {
@@ -53,7 +53,7 @@ export class AnimationLine {
 
     registerScrollTriggerVars(globalVars) {
         for (const id in this._scrollVars) {
-            if (globalVars[id] !== undefined) {throw "duplicate scroll trigger var id"; }
+            // if (globalVars[id] !== undefined) {throw "duplicate scroll trigger var id"; }
             globalVars[id] = this._scrollVars[id];
         }
     }

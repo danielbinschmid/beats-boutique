@@ -147,8 +147,21 @@ export class SceneRenderer {
 		this._animationLines.push(line1);
 
 		// @@@ Rotate dragon to the right @@@
+        
+        const initialLookAtDragon = new Vector3(20, 0, 1);
+        const vm = this;
 		function rotateDragon(mesh: Mesh, meshName: string) {
-			const rotation = new MeshRotation(
+            const line3 = new AnimationLine(2.5, 5, "line3");
+            mesh.lookAt(initialLookAtDragon);
+            const rotationLookAt = new MeshLookAt([mesh], initialLookAtDragon, tunnelPos);
+            line3.addAnimation(rotationLookAt, {start: 2.5, end: 4.5}, meshName)
+            const triggerVars = {}
+            line3.registerScrollTriggerVars(triggerVars);
+            console.log(triggerVars);
+            window.animationRenderer.renderVars(triggerVars);
+            vm._animationLines.push(line3);
+            /**
+             * const rotation = new MeshRotation(
 				[mesh],
 				Math.PI / 2,
 				2.5,
@@ -165,10 +178,12 @@ export class SceneRenderer {
 			} = {};
 			rotation.registerScrollTriggerVars(vars);
 			window.animationRenderer.renderObjs(vars);
+             */
+			
 		}
 
 		const tunnelPos = new Vector3(100, 0, 0);
-		const line2 = new AnimationLine(3, 7, "line2");
+		const line2 = new AnimationLine(2.5, 7, "line2");
         const dragonFocus = new CameraShift(this._camera, textCenter, dragonCenter);
         line2.addAnimation(dragonFocus, {start: 3, end: 3.5})
 

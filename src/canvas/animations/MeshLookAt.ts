@@ -29,11 +29,12 @@ export class MeshLookAt extends AnimationBase {
 	}
 
     getInterval(): { start: number; end: number } {
-		return {start: 0, end: 0};
+		return {start: 0, end: 1};
 	}
     
 	_update(newCur: number) {
         this._currentLookAt = new Vector3(0, 0, 0).add(this._start).add(new Vector3(0, 0, 0).add(this._directionVec).multiplyScalar(newCur));
+        console.log(this._currentLookAt);
 		for (const mesh of this._meshes) {
             mesh.lookAt(this._currentLookAt);
         }
