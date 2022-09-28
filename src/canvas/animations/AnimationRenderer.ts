@@ -12,7 +12,7 @@ export class AnimationRenderer {
 		this._allVars = [];
 		const tl1 = gsap.timeline({
 			defaults: { duration: 1 },
-			duration: 7,
+			duration: 7 + 6,
 			scrollTrigger: {
 				trigger: "start1",
 				scrub: true,

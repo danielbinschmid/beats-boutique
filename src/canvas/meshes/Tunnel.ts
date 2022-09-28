@@ -95,6 +95,13 @@ export class Tunnel extends MeshBase {
         return this.checkpoints[0];
     }
 
+    getCheckpointAt(i: number): Vector3 {
+        const angle = 1 * Math.PI * (i / this._nRings) + this._globalRotation;
+        const xzPos = new Vector2(Math.cos(angle), Math.sin(angle));
+        const pos = new Vector3(this._center.x + xzPos.x * this._radius, this._center.y, this._center.z + xzPos.y * this._radius);
+        return pos;
+    }
+
 	updateFrame() {
         for (const ring of this._rings) {
             ring.updateFrame();

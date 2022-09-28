@@ -165,6 +165,7 @@ export class SceneRenderer {
             vm._animationLines.push(line3);
 
             dragonMovementCallback(mesh, meshName);
+            dragonM(mesh, meshName);
 		}
         const checkpoints = tunnel.checkpoints;
 		const tunnelPos = checkpoints[0]; // new Vector3(100, 0, 0);
@@ -192,8 +193,7 @@ export class SceneRenderer {
         const endTunnelMovement = 7;
         const step = (endTunnelMovement - startTunnelMovement) / checkpoints.length;
         function dragonMovementCallback(mesh: Mesh, meshName: string) {
-            
-            
+                        
             for (var i = 0; i < checkpoints.length - 1; i++) {
                 var movementAnimation: MeshMovement | undefined = undefined
                 if (i == 0) {
@@ -234,7 +234,37 @@ export class SceneRenderer {
         
         // TODO: Bug when scrolling back from tunnel
 
-        
+        // Last scene
+        const lastLine = new AnimationLine(7, 8, "last line");
+
+        const cameraObjsDistance = 20;
+        const objDistances = 15;
+        const finalCameraPos = tunnel.getCheckpointAt(checkpoints.length);
+        const finalCamLookAt = tunnel.getCheckpointAt(checkpoints.length + 1);
+        const finalDragonPos = finalCamLookAt;
+
+
+        const camMove = new CameraZoom(checkpoints[checkpoints.length - 2], finalCameraPos, this._camera, undefined);
+        lastLine.addAnimation(camMove, {start: 7, end: 8}, "ll");
+        const camShift = new CameraShift(this._camera, checkpoints[checkpoints.length - 1], finalCamLookAt)
+        lastLine.addAnimation(camShift, {start: 7, end: 8}, "sdg");
+
+        function dragonM(mesh: Mesh, meshName: string) {
+            const mo = new MeshMovement([mesh], checkpoints[checkpoints.length - 2], finalDragonPos, 7, 8, "mo" + meshName);
+            const vars = {}
+            mo.registerScrollTriggerVars(vars);
+            window.animationRenderer.renderObjs(vars);
+        }
+
+        this._animationLines.push(lastLine);
+        lastLine.registerScrollTriggerVars(this.scrollTriggerVars);
+
+        // right shall be a cloud with points inside to click
+        // each point represents a point, interactive single page interface
+        // Last page is about me:
+        // Made with three.js
+        // - Author: Daniel Bin Schmid 
+        // - M.Sc. Informatics student at TU Munich
 	}
 
 	constructor() {

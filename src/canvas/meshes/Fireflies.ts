@@ -42,7 +42,7 @@ export class Fireflies extends MeshBase {
 		const size = 2;
 		var sphereGeom = new THREE.SphereGeometry(size, 50, 50);
 
-		const nSpheres = 100;
+		const nSpheres = 300;
 		this._nSpheres = nSpheres;
 
 		var sphere = new THREE.InstancedMesh(
@@ -53,7 +53,7 @@ export class Fireflies extends MeshBase {
 
 		for (var i = 0; i < nSpheres; i++) {
 			const m: Matrix4 = new Matrix4();
-			const universumSize = 200;
+			const universumSize = 1000;
 			const sphereSize = this._size;
 			const pos = new Vector3(
 				Math.random() * universumSize - universumSize / 2,

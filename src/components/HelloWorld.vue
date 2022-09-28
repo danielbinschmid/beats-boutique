@@ -36,6 +36,12 @@ onMounted(() => {});
 		<section></section>
 		<section></section>
 		<section></section>
+        <section></section>
+		<section></section>
+		<section></section>
+        <section></section>
+		<section></section>
+		<section></section>
 	</div>
 </template>
 
