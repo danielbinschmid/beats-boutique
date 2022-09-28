@@ -89,6 +89,8 @@ export class Spheres extends MeshBase {
         this._mesh = sphere
     }
 
+    
+
     _drawPosition(nRings, ballsPerRing, calcBallsPerRing = undefined) {
         const badRadius =12;
         const goodRadius = 22;

@@ -24,6 +24,8 @@ import { CameraShift } from "@/canvas/animations/CameraShift";
 import { AnimationBase } from "@/canvas/animations/AnimationBase";
 import { AnimationLine } from "@/canvas/animations/AnimationLine";
 import { Tunnel } from "../meshes/Tunnel";
+import { MeshMovement } from "../animations/MeshMovement";
+
 
 export class SceneRenderer {
 	_meshes: MeshBase[];
@@ -105,8 +107,9 @@ export class SceneRenderer {
 		this._addMesh(new Spheres(false, dragonCenter));
 		this._addMesh(new Spheres(true, dragonCenter));
 		this._addMesh(new Fireflies());
+        const tunnel = new Tunnel(new Vector3(100, 0, 95), 100, (3 * Math.PI) / 2)
 		this._addMesh(
-			new Tunnel(new Vector3(100, 0, 95), 100, (3 * Math.PI) / 2)
+			tunnel
 		);
 
 		// ----------------- ANIMATIONS -------------------
@@ -151,39 +154,21 @@ export class SceneRenderer {
         const initialLookAtDragon = new Vector3(20, 0, 1);
         const vm = this;
 		function rotateDragon(mesh: Mesh, meshName: string) {
-            const line3 = new AnimationLine(2.5, 5, "line3");
+            const line3 = new AnimationLine(2.5, 4, "line3");
             mesh.lookAt(initialLookAtDragon);
             const rotationLookAt = new MeshLookAt([mesh], initialLookAtDragon, tunnelPos);
-            line3.addAnimation(rotationLookAt, {start: 2.5, end: 4.5}, meshName)
+            line3.addAnimation(rotationLookAt, {start: 2.5, end: 4}, meshName)
             const triggerVars = {}
             line3.registerScrollTriggerVars(triggerVars);
             console.log(triggerVars);
             window.animationRenderer.renderVars(triggerVars);
             vm._animationLines.push(line3);
-            /**
-             * const rotation = new MeshRotation(
-				[mesh],
-				Math.PI / 2,
-				2.5,
-				4.5,
-				meshName
-			);
-			const vars: {
-				[name: string]: {
-					start: number;
-					end: number;
-					target: {};
-					obj: {};
-				};
-			} = {};
-			rotation.registerScrollTriggerVars(vars);
-			window.animationRenderer.renderObjs(vars);
-             */
-			
-		}
 
-		const tunnelPos = new Vector3(100, 0, 0);
-		const line2 = new AnimationLine(2.5, 7, "line2");
+            dragonMovementCallback(mesh, meshName);
+		}
+        const checkpoints = tunnel.checkpoints;
+		const tunnelPos = checkpoints[0]; // new Vector3(100, 0, 0);
+		const line2 = new AnimationLine(2.5, 4, "line2");
         const dragonFocus = new CameraShift(this._camera, textCenter, dragonCenter);
         line2.addAnimation(dragonFocus, {start: 3, end: 3.5})
 
@@ -201,14 +186,55 @@ export class SceneRenderer {
         line2.registerScrollTriggerVars(this.scrollTriggerVars);
         this._animationLines.push(line2);
 
-		/**
-		 * Next: Kameraschwenker damit die Blickrichtung zum Portal zeigt und die Position mit dem Drachen übereinstimmt
-		 *
-		 * Idee: Feuerball während der Animation, beobachten wie der Feuerball fliegt
-		 *
-		 * Idee: Ab dem Moment wenn man aus der Sicht des Drachens blickt, ändert sich die Sicht. Man sieht Sterne oder so,
-		 * bzw. ne andere Dimension
-		 */
+
+        const line3 = new AnimationLine(4, 7, "tunnelMovement");
+        const startTunnelMovement = 4;
+        const endTunnelMovement = 7;
+        const step = (endTunnelMovement - startTunnelMovement) / checkpoints.length;
+        function dragonMovementCallback(mesh: Mesh, meshName: string) {
+            
+            
+            for (var i = 0; i < checkpoints.length - 1; i++) {
+                var movementAnimation: MeshMovement | undefined = undefined
+                if (i == 0) {
+                    movementAnimation = new MeshMovement([mesh], dragonCenter, checkpoints[i], startTunnelMovement + i * step, startTunnelMovement + (i + 1) * step, meshName + i);
+                } else {
+                    movementAnimation = new MeshMovement([mesh], checkpoints[i - 1], checkpoints[i],  startTunnelMovement + i * step, startTunnelMovement + (i + 1) * step, meshName + i);
+                }
+                
+                const objs = {};
+                movementAnimation.registerScrollTriggerVars(objs);
+                window.animationRenderer.renderObjs(objs);
+
+                var lookAt_: undefined | MeshLookAt = undefined;
+                const line4 = new AnimationLine( startTunnelMovement + i * step, startTunnelMovement + (i + 1) * step, "dragon tunnel movement " + i);
+                lookAt_ = new MeshLookAt([mesh, vm._camera],checkpoints[i], checkpoints[i + 1]);
+                line4.addAnimation(lookAt_, {start: startTunnelMovement + i * step, end: startTunnelMovement + (i + 1) * step}, "dragonlookat" + i);
+                vm._animationLines.push(line4);
+                const vars = {}
+                line4.registerScrollTriggerVars(vars);
+                window.animationRenderer.renderVars(vars);
+            }
+            
+        }
+        for (var i = 0; i < checkpoints.length - 1; i++) {
+            var cameraMovement: CameraZoom | undefined = undefined
+            if (i != 0) {
+                cameraMovement = new CameraZoom(checkpoints[i -1], checkpoints[i], this._camera, undefined);
+            } else {
+                cameraMovement = new CameraZoom(dragonCenter, checkpoints[i], this._camera, undefined);
+            }
+
+            const animationVars = {start: startTunnelMovement+ i * step, end: startTunnelMovement + (1 + i) * step}
+            line3.addAnimation(cameraMovement, animationVars, "ccc 0 " + i);
+        }
+
+        line3.registerScrollTriggerVars(this.scrollTriggerVars);
+        this._animationLines.push(line3);
+        
+        // TODO: Bug when scrolling back from tunnel
+
+        
 	}
 
 	constructor() {
@@ -225,6 +251,9 @@ export class SceneRenderer {
 		for (const line of this._animationLines) {
 			line.update(this.scrollTriggerVars["global"].value);
 		}
+        // for (const v of window.animationRenderer._allVars) {
+        //     console.log(v.id);
+        // }
 		requestAnimationFrame(() => {
 			this.animate(vm);
 		});

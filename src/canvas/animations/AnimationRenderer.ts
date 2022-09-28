@@ -52,7 +52,7 @@ export class AnimationRenderer {
 			value: number;
 		};
 	}) {
-		this._allVars.push(vars);
+		// this._allVars.push(vars);
 		for (let key in vars) {
 			const val = vars[key];
 			this._timeline.to(

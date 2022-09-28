@@ -16,6 +16,8 @@ export class Tunnel extends MeshBase {
     _uniforms;
     _material;
     _globalRotation;
+    checkpoints: Vector3[];
+
 	constructor(center: Vector3, radius: number, rotation: number=0) {
 		super();
         this._globalRotation = rotation;
@@ -38,15 +40,14 @@ export class Tunnel extends MeshBase {
 			vecsForCycle.push([Math.cos(angle), Math.sin(angle)]);
             rotations.push( Math.PI - angle )
 		}
-
-		
+        this.checkpoints = []
 		for (var i = 0; i < this._nRings; i++) {
             const xzPos = new Vector2(
 				vecsForCycle[i][0] * this._radius,
 				vecsForCycle[i][1] * this._radius,
             )
             const pos = new Vector3(this._center.x + xzPos.x, this._center.y , this._center.z + xzPos.y);
-            
+            this.checkpoints.push(new Vector3().copy(pos));
 
             const sphereUniforms = {
                 u_time: {
@@ -77,6 +78,22 @@ export class Tunnel extends MeshBase {
         }
 
 	}
+
+    getCenter(): Vector3 {
+        return new Vector3().copy(this._center);  
+    }
+
+    getRadius(): number {
+        return this._radius;
+    }
+
+    getEntry(): Vector3 {
+        const entryInfo = {
+            pos: this.checkpoints[0],
+            
+        }
+        return this.checkpoints[0];
+    }
 
 	updateFrame() {
         for (const ring of this._rings) {
