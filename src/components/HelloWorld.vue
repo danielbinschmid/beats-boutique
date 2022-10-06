@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeMount } from "vue";
 import AboutView from "@/views/AboutView.vue";
-
+import VueSection from "./ui_comps/VueSection.vue";
 const probs = defineProps<{
 	msg: string;
 }>();
@@ -13,8 +13,47 @@ onMounted(() => {});
 
 <template>
 	<div class="greetings">
-		<section id="start1"></section>
-		<section></section>
+		<section id="start1">
+            
+        </section>
+        <vue-section :borderTop_="true">
+            <h2>
+				Explore Explore Explore Explore
+			</h2>
+            <h2>
+				Explore Explore Explore Explore 
+			</h2>
+            <h2>
+				Explore Explore Explore Explore 
+			</h2>
+            <h2>
+				Explore Explore Explore Explore 
+			</h2>
+            <h2>
+				Explore Explore Explore Explore 
+			</h2>
+            <h2>
+				Explore Explore Explore Explore 
+			</h2>
+            <h2>
+				Explore Explore Explore Explore 
+			</h2>
+            <h2>
+				Explore Explore Explore Explore 
+			</h2>
+            <h2>
+				Explore Explore Explore Explore 
+			</h2>
+            <h2>
+				Explore Explore Explore Explore 
+			</h2>
+            <h2>
+				Explore Explore Explore Explore 
+			</h2>
+            <h2>
+				Explore Explore Explore Explore 
+			</h2>
+        </vue-section>
 		<section :name="'scroll section'">
 			<div :style="{ center: true }"></div>
 		</section>
@@ -46,6 +85,12 @@ onMounted(() => {});
 </template>
 
 <style scoped>
+#greetings {
+    margin-left: 0px;
+    padding-left: 0px;
+    width: 100%;
+}
+
 h1 {
 	font-weight: 500;
 	font-size: 2.6rem;
@@ -53,7 +98,7 @@ h1 {
 }
 
 h2 {
-
+    font-size: 5vw;
     font-weight: bold;
     text-align: center;
 }

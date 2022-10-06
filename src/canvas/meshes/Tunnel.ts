@@ -7,6 +7,8 @@ import sphereFragment from "@/shader/tunnel/sphereFragment.glsl?raw";
 import { MeshBase } from "./MeshBase";
 import { Spheres } from "./Spheres";
 
+
+
 export class Tunnel extends MeshBase {
 	_center: Vector3;
 	_nRings: number;

@@ -62,12 +62,14 @@ export class SceneRenderer {
 		});
 		this._renderer.setSize(window.innerWidth, window.innerHeight);
 
+        window.isMobile = window.innerHeight > window.innerWidth; 
 		window.addEventListener(
 			"resize",
 			() => {
 				this._camera.aspect = window.innerWidth / window.innerHeight;
 				this._camera.updateProjectionMatrix();
 				this._renderer.setSize(window.innerWidth, window.innerHeight);
+                window.isMobile = window.innerHeight > window.innerWidth; 
 			},
 			false
 		);
@@ -246,7 +248,7 @@ export class SceneRenderer {
 
         const camMove = new CameraZoom(checkpoints[checkpoints.length - 2], finalCameraPos, this._camera, undefined);
         lastLine.addAnimation(camMove, {start: 7, end: 8}, "ll");
-        const camShift = new CameraShift(this._camera, checkpoints[checkpoints.length - 1], finalCamLookAt)
+        const camShift = new CameraShift(this._camera, checkpoints[checkpoints.length - 1], finalCamLookAt);
         lastLine.addAnimation(camShift, {start: 7, end: 8}, "sdg");
 
         function dragonM(mesh: Mesh, meshName: string) {
