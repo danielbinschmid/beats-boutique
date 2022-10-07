@@ -9,7 +9,7 @@ const probs = defineProps<{
 
 <template>
 	<div class="vue-section">
-		<section >
+		<section :style="{borderTop: borderTop_? 'double': 'double'}">
             <slot> </slot>
         </section>
 	</div>
