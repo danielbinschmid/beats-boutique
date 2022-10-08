@@ -171,7 +171,7 @@ export class SceneRenderer {
 		}
         const checkpoints = tunnel.checkpoints;
 		const tunnelPos = checkpoints[0]; // new Vector3(100, 0, 0);
-		const line2 = new AnimationLine(2.5, 4, "line2");
+		const line2 = new AnimationLine(2.5, 5, "line2");
         const dragonFocus = new CameraShift(this._camera, textCenter, dragonCenter);
         line2.addAnimation(dragonFocus, {start: 3, end: 3.5})
 
@@ -190,9 +190,9 @@ export class SceneRenderer {
         this._animationLines.push(line2);
 
 
-        const line3 = new AnimationLine(4, 7, "tunnelMovement");
-        const startTunnelMovement = 4;
-        const endTunnelMovement = 7;
+        const line3 = new AnimationLine(4, 8, "tunnelMovement");
+        const startTunnelMovement = 5;
+        const endTunnelMovement = 8;
         const step = (endTunnelMovement - startTunnelMovement) / checkpoints.length;
         function dragonMovementCallback(mesh: Mesh, meshName: string) {
                         
@@ -205,12 +205,12 @@ export class SceneRenderer {
                 }
                 
                 const objs = {};
-                movementAnimation.registerScrollTriggerVars(objs);
+                // movementAnimation.registerScrollTriggerVars(objs);
                 window.animationRenderer.renderObjs(objs);
 
                 var lookAt_: undefined | MeshLookAt = undefined;
                 const line4 = new AnimationLine( startTunnelMovement + i * step, startTunnelMovement + (i + 1) * step, "dragon tunnel movement " + i);
-                lookAt_ = new MeshLookAt([mesh, vm._camera],checkpoints[i], checkpoints[i + 1]);
+                lookAt_ = new MeshLookAt([vm._camera],checkpoints[i], checkpoints[i + 1]);
                 line4.addAnimation(lookAt_, {start: startTunnelMovement + i * step, end: startTunnelMovement + (i + 1) * step}, "dragonlookat" + i);
                 vm._animationLines.push(line4);
                 const vars = {}
@@ -234,10 +234,11 @@ export class SceneRenderer {
         line3.registerScrollTriggerVars(this.scrollTriggerVars);
         this._animationLines.push(line3);
         
-        // TODO: Bug when scrolling back from tunnel
 
         // Last scene
-        const lastLine = new AnimationLine(7, 8, "last line");
+        const start = 8;
+        const end = 9;
+        const lastLine = new AnimationLine(start, end, "last line");
 
         const cameraObjsDistance = 20;
         const objDistances = 15;
@@ -247,15 +248,15 @@ export class SceneRenderer {
 
 
         const camMove = new CameraZoom(checkpoints[checkpoints.length - 2], finalCameraPos, this._camera, undefined);
-        lastLine.addAnimation(camMove, {start: 7, end: 8}, "ll");
+        lastLine.addAnimation(camMove, {start: start, end: end}, "ll");
         const camShift = new CameraShift(this._camera, checkpoints[checkpoints.length - 1], finalCamLookAt);
-        lastLine.addAnimation(camShift, {start: 7, end: 8}, "sdg");
+        lastLine.addAnimation(camShift, {start: start, end: end}, "sdg");
 
         function dragonM(mesh: Mesh, meshName: string) {
             const mo = new MeshMovement([mesh], checkpoints[checkpoints.length - 2], finalDragonPos, 7, 8, "mo" + meshName);
             const vars = {}
-            mo.registerScrollTriggerVars(vars);
-            window.animationRenderer.renderObjs(vars);
+            // mo.registerScrollTriggerVars(vars);
+            // window.animationRenderer.renderObjs(vars);
         }
 
         this._animationLines.push(lastLine);

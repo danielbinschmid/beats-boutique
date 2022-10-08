@@ -1,15 +1,15 @@
 <script setup lang="ts">
 
 const probs = defineProps<{
-    borderTop_: boolean;
-	msg: string;
+    borderTop_?: boolean;
+	msg?: string;
 }>();
 
 </script>
 
 <template>
 	<div class="vue-section">
-		<section :style="{borderTop: borderTop_? 'double': 'double'}">
+		<section :style="{borderTop: borderTop_? 'double': ''}">
             <slot> </slot>
         </section>
 	</div>
@@ -25,7 +25,7 @@ section {
 	height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: rgba(180, 240,100, 0.5 );
+    background-color: rgba(0, 240,255, 0.5 );
     width: 100%;
     mix-blend-mode:difference;
 }

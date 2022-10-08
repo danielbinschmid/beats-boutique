@@ -2,6 +2,8 @@
 import { ref, computed, onMounted, onBeforeMount, reactive, watch, WritableComputedRef, ComputedRef } from "vue";
 import AboutView from "@/views/AboutView.vue";
 import VueSection from "./ui_comps/VueSection.vue";
+
+import FillerSection from "./FillerSection.vue";
 const probs = defineProps<{
     msg: string;
 }>();
@@ -34,23 +36,30 @@ const fillerText_: ComputedRef<string[]> = computed(() => {
 const nRows = 10;
 
 function computeSizes() {
-    const introSectionHeight: number = introSection.value.clientHeight;
+    const introSectionHeight: number = refSection.value.clientHeight;
     const singleRowHeight = introSectionHeight / nRows;
     fillerFontSize.val = Math.floor(singleRowHeight / 1.5) + 'px';
     heightFillerTextDiv.heightFillerTextDiv_ = Math.floor(100 / nRows) + "%";
+
+    h2FontSize.val =Math.floor(singleRowHeight / 2) + 'px';
+
+    subtitleFontSize.val = Math.floor(singleRowHeight / 3.5) + 'px';
 }
 
 
 
 onBeforeMount(() => { });
-const introSection = ref(null);
+const refSection = ref(null);
 
 const headingFiller = ref(null);
 
 const fillerFontSize = reactive({ val: '' })
+const h2FontSize = reactive({val: ''})
 const heightFillerTextDiv_ = '';
 const heightFillerTextDiv = reactive({ heightFillerTextDiv_ });
-console.log(heightFillerTextDiv)
+const subtitleFontSize = reactive({val: ''})
+
+
 onMounted(() => {
     computeSizes();
 
@@ -59,42 +68,34 @@ onMounted(() => {
 
 <template>
     <div class="greetings">
-        <section id="start1">
+        <section id="start1" ref="refSection">
 
         </section>
-        <div ref="introSection">
-            <vue-section :borderTop_="true" :msg="'nothing'">
-                <div v-for="(item, i) in fillerText_" :key="i"
-                    :style="{height: heightFillerTextDiv.heightFillerTextDiv_}" ref="headingFiller">
-                    <h2 :style="{fontSize: fillerFontSize.val }"> {{item}} </h2>
-
-                </div>
-            </vue-section>
-        </div>
-
+        <filler-section :msg="'EXPLORE'" />
         <section :name="'scroll section'">
-            <div :style="{ center: true }"></div>
         </section>
         <section :name="'Content section'">
-            <!--
-            <div class="subtitle">
+            
+            <div class="subtitle" :style="{fontSize: subtitleFontSize.val}">
                 (你是王 (nǐ shì wáng) := "You are king")
             </div>
-            <h2>
+            <h2 :style="{fontSize: h2FontSize.val}">
 				Let Your Vision Become Reality ~ 
 			</h2>
-            <div class="subtitle">
+            <div class="subtitle" :style="{fontSize: subtitleFontSize.val}">
 				Made by Daniel Bin Schmid
             </div>
-            <div class="subtitle">
+            <div class="subtitle" :style="{fontSize: subtitleFontSize.val}">
 				Contact: Mail, LinkedIn, Github
 			</div>
-            -->
+            
         </section>
         <section id="start2"></section>
-        <section></section>
-        <section></section>
-        <section></section>
+        <filler-section :msg="''"/>
+        <filler-section :msg="'EXPLORE'"/>
+        <filler-section :msg="'TIME'"/>
+        
+        
         <section></section>
         <section></section>
         <section></section>
@@ -126,6 +127,14 @@ h2 {
 
     font-size: 100%;
     font-weight: bold;
+    text-align: center;
+}
+
+h3 {
+    text-align: center;
+}
+
+.subtitle {
     text-align: center;
 }
 
