@@ -5,8 +5,8 @@ import VueSection from "./ui_comps/VueSection.vue";
 
 
 const probs = defineProps<{
-    msg: string;
-    color?: string;
+    msgs: string[];
+    nRows?: number
 }>();
 
 
@@ -16,24 +16,14 @@ window.addEventListener('resize', () => {
     computeSizes();
 })
 
-const fillerText_: ComputedRef<string[]> = computed(() => {
-    const nFiller = isMobile.val ? 2 : 4;
-    var fillerStr = ""
-    for (var i = 0; i < nFiller; i++) {
-        fillerStr = fillerStr + probs.msg  + " ";
-    }
+let nRows = 10;
+if (probs.nRows != undefined) {
+    nRows = probs.nRows;
+}
+
+console.log(nRows)
 
 
-    const filler = []
-    for (var i = 0; i < nRows; i++) {
-        filler.push(fillerStr);
-    }
-    return filler;
-})
-
-
-
-const nRows = 10;
 
 function computeSizes() {
     const introSectionHeight: number = introSection.value.clientHeight;
@@ -69,10 +59,10 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="filler-section">
+    <div class="content-section">
         <div ref="introSection">
-            <vue-section :borderTop_="false"  :msg="'nothing'" :color="color">
-                <div v-for="(item, i) in fillerText_" :key="i"
+            <vue-section :borderTop_="false"  :msg="'nothing'">
+                <div v-for="(item, i) in msgs" :key="i"
                     :style="{height: heightFillerTextDiv.heightFillerTextDiv_}" ref="headingFiller">
                     <h2 :style="{fontSize: fillerFontSize.val }"> {{item}} </h2>
 

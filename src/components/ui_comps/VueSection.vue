@@ -3,13 +3,14 @@
 const probs = defineProps<{
     borderTop_?: boolean;
 	msg?: string;
+    color?: string;
 }>();
 
 </script>
 
 <template>
 	<div class="vue-section">
-		<section :style="{borderTop: borderTop_? 'double': ''}">
+		<section :style="{borderTop: borderTop_? 'double': '', backgroundColor: color? color: 'rgba(0, 240,255, 0.5 )'}">
             <slot> </slot>
         </section>
 	</div>
@@ -25,7 +26,6 @@ section {
 	height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: rgba(0, 240,255, 0.5 );
     width: 100%;
     mix-blend-mode:difference;
 }

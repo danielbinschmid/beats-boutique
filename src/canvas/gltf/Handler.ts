@@ -37,7 +37,7 @@ export abstract class GltfHandler extends MeshBase {
             },
             (xhr) => {
                 // called while loading is progressing
-                console.log(`${(xhr.loaded / xhr.total) * 100}% loaded`);
+                // console.log(`${(xhr.loaded / xhr.total) * 100}% loaded`);
             },
             (error) => {
                 // called when loading has errors

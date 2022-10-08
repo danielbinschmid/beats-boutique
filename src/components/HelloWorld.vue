@@ -4,6 +4,7 @@ import AboutView from "@/views/AboutView.vue";
 import VueSection from "./ui_comps/VueSection.vue";
 
 import FillerSection from "./FillerSection.vue";
+import ContentSection from "./ContentSection.vue";
 const probs = defineProps<{
     msg: string;
 }>();
@@ -26,8 +27,6 @@ const fillerText_: ComputedRef<string[]> = computed(() => {
     for (var i = 0; i < nRows; i++) {
         filler.push(fillerStr);
     }
-
-    console.log(window.isMobile);
     return filler;
 })
 
@@ -59,7 +58,7 @@ const heightFillerTextDiv_ = '';
 const heightFillerTextDiv = reactive({ heightFillerTextDiv_ });
 const subtitleFontSize = reactive({val: ''})
 
-
+const c = 'rgba(160, 255, 150, 0.1)'
 onMounted(() => {
     computeSizes();
 
@@ -68,40 +67,15 @@ onMounted(() => {
 
 <template>
     <div class="greetings">
-        <section id="start1" ref="refSection">
-
-        </section>
-        <filler-section :msg="'EXPLORE'" />
-        <section :name="'scroll section'">
-        </section>
-        <section :name="'Content section'">
-            
-            <div class="subtitle" :style="{fontSize: subtitleFontSize.val}">
-                (你是王 (nǐ shì wáng) := "You are king")
-            </div>
-            <h2 :style="{fontSize: h2FontSize.val}">
-				Let Your Vision Become Reality ~ 
-			</h2>
-            <div class="subtitle" :style="{fontSize: subtitleFontSize.val}">
-				Made by Daniel Bin Schmid
-            </div>
-            <div class="subtitle" :style="{fontSize: subtitleFontSize.val}">
-				Contact: Mail, LinkedIn, Github
-			</div>
-            
-        </section>
-        <section id="start2"></section>
-        <filler-section :msg="''"/>
-        <filler-section :msg="'EXPLORE'"/>
-        <filler-section :msg="'TIME'"/>
-        
-        
-        <section></section>
-        <section></section>
-        <section></section>
-        <section></section>
-        <section></section>
-        <section></section>
+        <section id="start1" ref="refSection" > </section>
+        <content-section :msgs="['ARTIST PAGE', 'by Daniel Bin Schmid', '~ Web-design artist' ,'', 'Made with Three.js', '', '', '', '', '⌄⌄ Space jump ⌄⌄']" :n-rows="10"/>
+        <!--<filler-section :msg="'EXPLORE'" /> -->
+        <section  id="start2" > </section>
+        <content-section :msgs="['Have a safe trip', '', 'Имате безопасно' ,'', 'Eine gute Reise', '', '一路平安', '', '', '⌄⌄ !! ⌄⌄']" :n-rows="10"/>
+        <section  > </section>
+        <content-section :msgs="['Enjoy music on your trip', '', 'Имате безопасно' ,'', 'Eine gute Reise', '', '一路平安', '', '', '⌄⌄ !! ⌄⌄']" :n-rows="10"/>
+        <filler-section :msg="'ARRIVAL'"/>
+        <section  > </section>
     </div>
 </template>
 

@@ -20,7 +20,7 @@ export class Fireflies extends MeshBase {
     _size;
 	constructor() {
 		super();
-        this._size = 0.05;
+        this._size = 0.1;
 		this._initialMatrices = [];
 		this._clock = new THREE.Clock(true);
 		const sphereUniforms = {
@@ -42,7 +42,7 @@ export class Fireflies extends MeshBase {
 		const size = 2;
 		var sphereGeom = new THREE.SphereGeometry(size, 50, 50);
 
-		const nSpheres = 300;
+		const nSpheres = 1000;
 		this._nSpheres = nSpheres;
 
 		var sphere = new THREE.InstancedMesh(
@@ -94,7 +94,7 @@ export class Fireflies extends MeshBase {
 		this._uniforms.u_time.value = this._clock.getElapsedTime();
 		for (var sphereIdx = 0; sphereIdx < this._nSpheres; sphereIdx++) {
             const pos = this._initialMatrices[sphereIdx].add( new Vector3(0, -0.1, 0));
-            pos.y = mod(pos.y, 100);
+            pos.y = mod(pos.y, 400);
 
             const m = new Matrix4();
             m.set(this._size,
