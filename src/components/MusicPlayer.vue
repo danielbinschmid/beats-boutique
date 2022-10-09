@@ -6,6 +6,7 @@ const probs = defineProps<{
     artistName?: string;
     audioURL?: string;
     songName?: string;
+    type?: string;
 }>();
 
 const isMobile = reactive({ val: ui.isMobile() });
@@ -42,7 +43,7 @@ const options = {
         <div class="playerBox" :style="{flexFlow: isMobile.val ? 'column nowrap': 'row nowrap'}">
             <div :style="{width: isMobile.val? '100%': (100 / nElements) +'%'}" class="basicBox">
                 <audio controls class="audio" >
-                    <source src="music/2.mp3" type="audio/mpeg">
+                    <source :src="audioURL? audioURL: 'music/2.mp3'" :type="type? type :'audio/mpeg'">
                     <!--<source src="music/2.mp3" type="audio/ogg"> Your browser does not support the audio tag. -->
 
                 </audio>
