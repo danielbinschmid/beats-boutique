@@ -5,6 +5,9 @@ import VueSection from "./ui_comps/VueSection.vue";
 import EntertainmentSection from "./EntertainmentSection.vue"
 import FillerSection from "./FillerSection.vue";
 import ContentSection from "./ContentSection.vue";
+import beatsMetadata from "./beatsMetadata.json";
+import beatsMetadata2 from "./beatsMetadata2.json";
+
 const probs = defineProps<{
     msg: string;
 }>();
@@ -29,7 +32,6 @@ const fillerText_: ComputedRef<string[]> = computed(() => {
     }
     return filler;
 })
-
 
 
 const nRows = 10;
@@ -68,13 +70,13 @@ onMounted(() => {
 <template>
     <div class="greetings">
         <section id="start1" ref="refSection" > </section>
-        <content-section :msgs="['ARTIST PAGE', 'by Daniel Bin Schmid', '~ Web-design artist' ,'', 'Made with Three.js', '', '', '', '', '⌄⌄ Space jump ⌄⌄']" :n-rows="10"/>
+        <content-section :msgs="['BEAT BOUTIQUE', '', 'Trap Beats & more' ,'', 'by prodbycctv, Zeno & other', '', '', '', '', '⌄⌄ Scroll for Beats ⌄⌄']" :n-rows="10"/>
         <!--<filler-section :msg="'EXPLORE'" /> -->
         <section  id="start2" > </section>
         <content-section :msgs="['Have a safe trip', '', 'Имате безопасно' ,'', 'Eine gute Reise', '', '一路平安', '', '', '⌄⌄ !! ⌄⌄']" :n-rows="10"/>
         <section  > </section>
-        <entertainment-section />
-        <filler-section :msg="'ARRIVAL'"/>
+        <entertainment-section :tracks="beatsMetadata" />
+        <entertainment-section :tracks="beatsMetadata2" />
         <section  > </section>
     </div>
 </template>

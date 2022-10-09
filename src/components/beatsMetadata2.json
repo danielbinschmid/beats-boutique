@@ -1,0 +1,22 @@
+[
+    {
+        "url": "music/westham_Fminor_90bpm_prodbyZENO.mp3",
+        "songName": "Westham, Fminor, 90bpm",
+        "artistName": "Zeno"
+    },
+    {
+        "url": "music/calm1_90bpm_prodbyZENO.mp3",
+        "songName": "Calm, 90bpm",
+        "artistName": "Zeno"
+    },
+    {
+        "url": "music/darkwave1_Cisminor_144bpm_prodbyZENO.mp3",
+        "songName": "Darkwave, C# Minor, 144bpm",
+        "artistName": "Zeno"
+    },
+    {
+        "url": "music/futuro_Gminor_120bpm_prodbyZENO.mp3",
+        "songName": "Futuro, G Minor, 120BPM",
+        "artistName": "Zeno"
+    }
+]

@@ -68,16 +68,21 @@ const options = {
 <style scoped>
 .playerBox {
     display: flex;
-    margin-top: 5%;
     justify-content: space-evenly;
-    margin-bottom: 5%;
+    align-items: center;
+    width: 100%;
 }
 
 .basicBox {
-
+    align-self: center;
     display: flex;
     justify-content: center;
     align-items: center
+}
+
+.music-player {
+    display: flex;
+    width: 100%;
 }
 
 .audio {
