@@ -8,6 +8,7 @@ import {
     PerspectiveCamera,
     Vector3,
     Mesh,
+    Camera,
 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
@@ -128,7 +129,7 @@ export class SceneRenderer {
         };
 
         // @@@ introduction animation @@@
-        const line1 = new AnimationLine(0, 1.5, "start_");
+        const line1 = new AnimationLine(0, 1.8, "start_");
         this._camera.lookAt(dragonCenter);
         const cameraPos1 = new Vector3(40, 0, 40);
         const animation = new CameraZoom(
@@ -138,6 +139,9 @@ export class SceneRenderer {
             dragonCenter
         );
         line1.addAnimation(animation, { start: 0, end: 1 });
+
+        const fixPls = new CameraShift(this._camera, dragonCenter, dragonCenter);
+        line1.addAnimation(fixPls, {start: 1, end: 1.8}, "fixpls");
         
 
         line1.registerScrollTriggerVars(this.scrollTriggerVars);
@@ -159,7 +163,7 @@ export class SceneRenderer {
         }
         const checkpoints = tunnel.checkpoints;
         const tunnelPos = checkpoints[0]; // new Vector3(100, 0, 0);
-        const line2 = new AnimationLine(1, 4, "line2");
+        const line2 = new AnimationLine(1.5, 4, "line2");
         // const dragonFocus = new CameraShift(this._camera, textCenter, dragonCenter);
         // line2.addAnimation(dragonFocus, { start: 3, end: 3.5 })
 
@@ -172,22 +176,26 @@ export class SceneRenderer {
         const c = 0.5;
         line2.addAnimation(movement, { start: 1.5, end: 2 });
         const lookat = new CameraShift(this._camera, dragonCenter, tunnelPos);
-        line2.addAnimation(lookat, { start: 1.8, end: 2 });
 
+        const extraLine = new AnimationLine(1.5, 2.5, "extra line");
+
+        extraLine.addAnimation(lookat, { start: 1.8, end: 2 });
+        
+        extraLine.registerScrollTriggerVars(this.scrollTriggerVars);
+        this._animationLines.push(extraLine);
         line2.registerScrollTriggerVars(this.scrollTriggerVars);
         this._animationLines.push(line2);
 
 
-        const line3 = new AnimationLine(4, 6, "tunnelMovement");
+        const line3 = new AnimationLine(3.5, 7, "tunnelMovement");
         const startTunnelMovement = 4;
-        const endTunnelMovement = 6;
+        const endTunnelMovement = 7;
         const step = (endTunnelMovement - startTunnelMovement) / checkpoints.length;
     
         
         for (var i = 0; i < checkpoints.length; i++) {
             var cameraMovement: CameraZoom | undefined = undefined
             if (i != 0) {
-                
                 cameraMovement = new CameraZoom(tunnel.getCheckpointAt(i - 1), tunnel.getCheckpointAt(i), this._camera, undefined);
             } else {
                 cameraMovement = new CameraZoom(dragonCenter, tunnel.getCheckpointAt(i), this._camera, undefined);
@@ -202,7 +210,7 @@ export class SceneRenderer {
             
 
 
-            const vars = {}
+            const vars = {};
             line4.registerScrollTriggerVars(vars);
             window.animationRenderer.renderVars(vars);
         }
@@ -215,13 +223,13 @@ export class SceneRenderer {
                 start: 2,
                 end: 4,
                 obj: this._camera,
-                target: { fov: 160}
+                target: { fov: 160 }
             },
             "camFov2": {
-                start: 5.5,
-                end: 6,
+                start: 6.5,
+                end: 7,
                 obj: this._camera,
-                target: {fov: 20}
+                target: {fov: 20 }
             }
         }
         window.animationRenderer.renderObjs(camFov);

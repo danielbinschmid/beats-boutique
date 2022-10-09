@@ -11,6 +11,7 @@ export abstract class AnimationBase {
     abstract getInterval(): {start: number, end: number};
 
     update(newCur: number) {
+        
         if (this._cur != newCur) {
             this._update(newCur);
         }

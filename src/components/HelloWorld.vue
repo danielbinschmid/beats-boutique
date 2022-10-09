@@ -2,7 +2,7 @@
 import { ref, computed, onMounted, onBeforeMount, reactive, watch, WritableComputedRef, ComputedRef } from "vue";
 import AboutView from "@/views/AboutView.vue";
 import VueSection from "./ui_comps/VueSection.vue";
-
+import EntertainmentSection from "./EntertainmentSection.vue"
 import FillerSection from "./FillerSection.vue";
 import ContentSection from "./ContentSection.vue";
 const probs = defineProps<{
@@ -58,7 +58,7 @@ const heightFillerTextDiv_ = '';
 const heightFillerTextDiv = reactive({ heightFillerTextDiv_ });
 const subtitleFontSize = reactive({val: ''})
 
-const c = 'rgba(160, 255, 150, 0.1)'
+const c = 'rgba(160, 255, 150, 0.5)'
 onMounted(() => {
     computeSizes();
 
@@ -73,7 +73,7 @@ onMounted(() => {
         <section  id="start2" > </section>
         <content-section :msgs="['Have a safe trip', '', 'Имате безопасно' ,'', 'Eine gute Reise', '', '一路平安', '', '', '⌄⌄ !! ⌄⌄']" :n-rows="10"/>
         <section  > </section>
-        <content-section :msgs="['Enjoy music on your trip', '', 'Имате безопасно' ,'', 'Eine gute Reise', '', '一路平安', '', '', '⌄⌄ !! ⌄⌄']" :n-rows="10"/>
+        <entertainment-section />
         <filler-section :msg="'ARRIVAL'"/>
         <section  > </section>
     </div>
