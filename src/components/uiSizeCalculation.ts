@@ -6,7 +6,8 @@ export function isMobile() {
 }
 
 
-export function computeSizes(sectionHeight: number, nRows: number) {
+export function computeSizes(sectionHeight: number, nRows?: number) {
+    nRows = nRows? nRows: 10;
     const singleRowHeight = sectionHeight / nRows;
 
     return {

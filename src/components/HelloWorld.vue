@@ -7,7 +7,7 @@ import FillerSection from "./FillerSection.vue";
 import ContentSection from "./ContentSection.vue";
 import beatsMetadata from "./beatsMetadata.json";
 import beatsMetadata2 from "./beatsMetadata2.json";
-
+import About from "./About.vue"
 const probs = defineProps<{
     msg: string;
 }>();
@@ -73,11 +73,13 @@ onMounted(() => {
         <content-section :msgs="['BEAT BOUTIQUE', '', 'Trap Beats & more' ,'', 'by prodbycctv, Zeno & other', '', '', '', '', '⌄⌄ Scroll for Beats ⌄⌄']" :n-rows="10"/>
         <!--<filler-section :msg="'EXPLORE'" /> -->
         <section  id="start2" > </section>
-        <content-section :msgs="['Have a safe trip', '', 'Имате безопасно' ,'', 'Eine gute Reise', '', '一路平安', '', '', '⌄⌄ !! ⌄⌄']" :n-rows="10"/>
+        <content-section :msgs="['Have a safe trip', '', 'Имате безопасно' ,'', 'Eine gute Reise', '', '一路平安', '', '', '⌄⌄ Discover more ⌄⌄']" :n-rows="10"/>
         <section  > </section>
         <entertainment-section :tracks="beatsMetadata" />
         <entertainment-section :tracks="beatsMetadata2" />
-        <section  > </section>
+        <section  > 
+            <about />
+        </section>
     </div>
 </template>
 

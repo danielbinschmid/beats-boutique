@@ -37,7 +37,7 @@ export class SceneRenderer {
     _animations: AnimationBase[];
     _animationLines: AnimationLine[];
     _localVars: { [name: string]: any };
-
+    _canvas;
     scrollTriggerVars: {
         [name: string]: {
             start: number;
@@ -56,6 +56,7 @@ export class SceneRenderer {
             1000
         );
         const canvas = document.getElementById("canvas");
+        this._canvas = canvas;
         this._renderer = new THREE.WebGLRenderer({
             canvas: canvas,
             antialias: true,
@@ -93,8 +94,8 @@ export class SceneRenderer {
         this._scene.add(directionalLight);
 
         // orbit control
-        // const orbitcontrols = new OrbitControls(this._camera, canvas);
-        // orbitcontrols.position0 = this._camera.position;
+        const orbitcontrols = new OrbitControls(this._camera, this._canvas);
+        orbitcontrols.position0 = this._camera.position;
 
         // ------------------- MESHES ---------------------
         this._meshes = [];
@@ -155,7 +156,7 @@ export class SceneRenderer {
             const line3 = new AnimationLine(1, 3, "line3");
             mesh.lookAt(initialLookAtDragon);
             const rotationLookAt = new MeshLookAt([mesh], initialLookAtDragon, tunnelPos);
-            line3.addAnimation(rotationLookAt, { start: 1.75, end: 2 }, meshName)
+            line3.addAnimation(rotationLookAt, { start: 1.75, end: 1.8 }, meshName)
             const triggerVars = {}
             line3.registerScrollTriggerVars(triggerVars);
             window.animationRenderer.renderVars(triggerVars);
@@ -179,7 +180,7 @@ export class SceneRenderer {
 
         const extraLine = new AnimationLine(1.5, 2.5, "extra line");
 
-        extraLine.addAnimation(lookat, { start: 1.8, end: 2 });
+        extraLine.addAnimation(lookat, { start: 1.75, end: 1.8 });
         
         extraLine.registerScrollTriggerVars(this.scrollTriggerVars);
         this._animationLines.push(extraLine);

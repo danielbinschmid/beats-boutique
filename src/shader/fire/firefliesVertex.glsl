@@ -58,10 +58,11 @@ void main() {
     movement = movement * 20.0;
     vec3 r = vec3(0.0, random(vec4(u_time, position)) * movement, 0.0);
     float m = sin(u_time * position.x * 2.5) * .8;
+    float m2 = sin(u_time * position.z * 2.5) * .8;
     float scaling = 0.5;
     float stretch = 10.0;
-    vec4 intermediate1 = vec4((position.x + m) * widening_factor, (position.y) * stretch, (position.z + sin(position.y * position.z)), 1.0);
-    intermediate1 = intermediate1 + vec4(r.x, r.y, r.z, 0.0);
+    vec4 intermediate1 = vec4((position.x + m) * widening_factor, (position.y) * stretch, (position.z + m2) * widening_factor, 1.0);
+    intermediate1 = intermediate1  + vec4(r.x, r.y, r.z, 0.0);
     intermediate1 = intermediate1 * scaling;
 
     pos = vec3(intermediate1.x, intermediate1.y, intermediate1.z);
