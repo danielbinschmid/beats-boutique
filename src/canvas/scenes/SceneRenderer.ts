@@ -147,9 +147,7 @@ export class SceneRenderer {
 
         this._addMesh(new FireComets());
         const tunnel = new Tunnel(new Vector3(100, 0, 95), 100, (3 * Math.PI) / 2)
-        //this._addMesh(
-        //    tunnel
-        //);
+        // this._addMesh(tunnel);
 
         /*
         const dragon = new DragonGltf(dragonCenter, undefined, rotateDragon);
@@ -186,32 +184,19 @@ export class SceneRenderer {
             const start = i == 0? dragonCenter: tunnel.getCheckpointAt(i - 1);
             new MeshMovement([this._camera], start, tunnel.getCheckpointAt(i), startTunnelMovement + i * step, startTunnelMovement + (1 + i) * step, "dragon tunnel movement " + i, this);
         }
-        
-
 
         // CAMERA LOOKATS
         this._camera.lookAt(dragonCenter);
-        const lookAtLine = new AnimationLine(0, 1.8, "landing page animation", this);
-        lookAtLine.addAnimation(new CameraShift(this._camera, dragonCenter, dragonCenter), { start: 0, end: 1.8 }, "fixate camera after introduction animation");
+        const lookAtLine = new AnimationLine(0, globalEnd, "landing page animation", this);
         
-    
-        const lookat = new CameraShift(this._camera, dragonCenter, tunnelPos);
-
-        const extraLine = new AnimationLine(1.5, 2.5, "extra line", this);
-
-        extraLine.addAnimation(lookat, { start: 1.75, end: 1.8 });
-
-
-        const line3 = new AnimationLine(3.5, 7, "tunnelMovement", this);
-
+        lookAtLine.addAnimation(new CameraShift(this._camera, dragonCenter, dragonCenter), { start: 0, end: 1.75 }, "fixate camera after introduction animation");
+        lookAtLine.addAnimation(new CameraShift(this._camera, dragonCenter, tunnelPos), {start: 1.75, end: 1.8}, "Look at tunnel start");
 
         for (var i = 0; i < checkpoints.length; i++) {
             const line4 = new AnimationLine(startTunnelMovement + i * step, startTunnelMovement + (i + 1) * step, "dragon tunnel movement " + i, this);
             const lookAt_ = new MeshLookAt([vm._camera], tunnel.getCheckpointAt(i), tunnel.getCheckpointAt(i + 1));
             line4.addAnimation(lookAt_, { start: startTunnelMovement + i * step, end: startTunnelMovement + (i + 1) * step }, "dragonlookat" + i);
-            vm._animationLines.push(line4);
         }
-
 
         // OTHER CAMERA ANIMATIONS
         this.scrollTriggerObjs["camFov"] = {
@@ -226,6 +211,7 @@ export class SceneRenderer {
             obj: this._camera,
             target: { fov: 20 }
         }
+        /********** CAMERA END **********/
 
 
         /* 
@@ -243,13 +229,6 @@ export class SceneRenderer {
             window.animationRenderer.renderVars(triggerVars);
             vm._animationLines.push(line3);
         }
-
-
-
-
-        
-
-        
         */
 
 

@@ -74,8 +74,11 @@ onMounted(() => {
         <section  id="start2" > </section>
         <content-section :msgs="['Have a safe trip', '', 'Имате безопасно' ,'', 'Eine gute Reise', '', '一路平安', '', '', '⌄⌄ Discover more ⌄⌄']" :n-rows="10"/>
         <section  > </section>
-        <entertainment-section :tracks="beatsMetadata" />
-        <entertainment-section :tracks="beatsMetadata2" />
+        <section  > </section>
+        <section  > </section>
+        <!--<entertainment-section :tracks="beatsMetadata" />
+        <entertainment-section :tracks="beatsMetadata2" /> -->
+        
         <section  > 
             <about />
         </section>

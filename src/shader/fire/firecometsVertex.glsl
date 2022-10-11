@@ -50,22 +50,24 @@ float random(vec4 v) {
     return floatConstruct(hash(floatBitsToUint(v)));
 }
 
+float wave(float x) {
+    return sin(u_time * x * 2.5) * .8;
+}
+
 void main() {
     norm = normal;
-    float widening_factor = min(0.0, position.y - 2.0);
-    widening_factor = (-1.0 * widening_factor);
-    float movement = max(0.0, position.y) * 1.0;
-    movement = movement * 20.0;
-    vec3 r = vec3(0.0, random(vec4(u_time, position)) * movement, 0.0);
-    float m = sin(u_time * position.x * 2.5) * .8;
-    float m2 = sin(u_time * position.z * 2.5) * .8;
-    float scaling = 0.5;
-    float stretch = 10.0;
-    vec4 intermediate1 = vec4((position.x + m) * widening_factor, (position.y) * stretch, (position.z + m2) * widening_factor, 1.0);
-    intermediate1 = intermediate1  + vec4(r.x, r.y, r.z, 0.0);
-    intermediate1 = intermediate1 * scaling;
+    float widening_factor = -1.0 * min(0.0, position.y - 2.0); // more wide at the bottom, slim at the top.
 
-    pos = vec3(intermediate1.x, intermediate1.y, intermediate1.z);
-    vec4 result = instanceMatrix * intermediate1;
-    gl_Position = projectionMatrix * modelViewMatrix * result;
+    float movement = max(0.0, position.y) * 20.0; // More random movement at the top
+    vec3 r = vec3(0.0, random(vec4(u_time, position)) * movement, 0.0); // Random movement
+
+    float waveX = wave(position.x); // Waves along x axis
+    float waveZ = wave(position.z); // Waves along z axis
+    float stretchY = 10.0; // stretch in y direction
+    vec4 result = vec4((position.x + waveX) * widening_factor, (position.y) * stretchY, (position.z + waveZ) * widening_factor, 1.0);
+    result = result  + vec4(r.x, r.y, r.z, 0.0); // add random flickering
+
+    pos = vec3(result.x, result.y, result.z); // pass adjusted vertex position to fragment shader
+
+    gl_Position = projectionMatrix * modelViewMatrix * instanceMatrix * result;
 }
