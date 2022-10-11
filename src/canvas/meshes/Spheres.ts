@@ -15,10 +15,14 @@ export class Spheres extends MeshBase {
     _horizontal;
     _center: Vector3;
     _parentMaterial;
-	constructor(horizontal = false, center=new Vector3(0, 0, 0), material = undefined) {
+    _skipCenterSpheres;
+
+	constructor(horizontal = false, center=new Vector3(0, 0, 0), material = undefined, skipCenterSpheres=false) {
         super();
+
         this._parentMaterial = material;
         this._center = center;
+        this._skipCenterSpheres = skipCenterSpheres;
         this._horizontal =horizontal;
         this._clock = new THREE.Clock(true);
 
@@ -50,20 +54,13 @@ export class Spheres extends MeshBase {
             this._material = material;
         }
 		
-
-		const size = 1;
-		var sphereGeom = new THREE.SphereGeometry(size, 50, 50);
-
-		
+		var sphereGeom = new THREE.SphereGeometry(1, 8, 6);
 		
         const nRings = 2;
         const ballsPerRing = 32;
-        const calcBallsPerRing = (ringIdx) => {
-            const n = ringIdx + 3
-            return n * n
-        }
-        const positions = this._drawPosition(nRings, ballsPerRing, calcBallsPerRing);
-        const nSpheres = nRings * ballsPerRing;
+        if (ballsPerRing % 4 != 0 && this._skipCenterSpheres) { throw new Error("Balls per ring muss durch 4 teilbar sein wenn skipCenterSpheres")}
+        const positions = this._drawPosition(nRings, ballsPerRing);
+        const nSpheres = this._skipCenterSpheres? nRings * (ballsPerRing - 2): nRings * ballsPerRing;
 
         var sphere = new THREE.InstancedMesh(
 			sphereGeom,
@@ -91,20 +88,19 @@ export class Spheres extends MeshBase {
 
     
 
-    _drawPosition(nRings, ballsPerRing, calcBallsPerRing = undefined) {
+    _drawPosition(nRings, ballsPerRing) {
         const badRadius =12;
         const goodRadius = 22;
 
-        const nTotalBalls = 60;
-        
-        // we need always the cos and sin from the angle
-        // angle between 0 - 360
+        const finalBallsPerRing = this._skipCenterSpheres? ballsPerRing - 2: ballsPerRing;
+
         const vecsForCycle = []
         for (var i = 0; i < ballsPerRing; i++) {
             const angle = (Math.PI * 2 / ballsPerRing) * i; 
-            vecsForCycle.push([Math.cos(angle), Math.sin(angle)])
+            if (!this._skipCenterSpheres || (i != ballsPerRing / 4 && i != 3 * ballsPerRing / 4)) {
+                vecsForCycle.push([Math.cos(angle), Math.sin(angle)]);
+            }
         }
-        // angles = [for (360 / nAngles) * i of i in arange(nAngles)]
 
         const radii = []
         for (var i = 0; i < nRings; i++) {
@@ -112,7 +108,7 @@ export class Spheres extends MeshBase {
         }
         const res = []
         for (var ring = 0; ring < nRings; ring++) {
-            for (var ball = 0; ball < ballsPerRing; ball++) {
+            for (var ball = 0; ball < finalBallsPerRing; ball++) {
                 res.push([vecsForCycle[ball][0] * radii[ring], vecsForCycle[ball][1] * radii[ring]])
             }
         }

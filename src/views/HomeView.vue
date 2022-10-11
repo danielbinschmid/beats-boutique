@@ -18,8 +18,11 @@ onMounted(() => {
 
 <template>
     <main>
-        <div class="target"> </div>
-        <canvas id="canvas"> </canvas>
+
+        <div class="canvas-container"> 
+            <canvas id="canvas"> </canvas>
+        </div>
+        
         
         
         <navigation-wrapper>
@@ -37,12 +40,20 @@ onMounted(() => {
 </template>
 
 <style scoped>
-#canvas {
-    right: 0;
-    bottom: 0;
+.canvas-container {
     position: fixed;
     top: 0;
     left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#canvas {
+
     background: inherit;
 }
 </style>

@@ -38,6 +38,8 @@ export class SceneRenderer {
     _animationLines: AnimationLine[];
     _localVars: { [name: string]: any };
     _canvas;
+    _prevCanvasWidth;
+    _prevCanvasHeight;
     scrollTriggerVars: {
         [name: string]: {
             start: number;
@@ -66,29 +68,34 @@ export class SceneRenderer {
 
         window.isMobile = window.innerHeight > window.innerWidth;
 
+        this._prevCanvasWidth = window.innerWidth;
+        this._prevCanvasHeight = window.innerHeight;
+
+        const tolerance = 1.2;
+        const delay = 250;
         var timeout = undefined;
 
-        const resizeTimeout = 100;
-        window.addEventListener("resize",
+        window.addEventListener(
+            "resize",
             () => {
                 clearTimeout(timeout);
                 timeout = setTimeout(() => {
-                    this._camera.aspect = window.innerWidth / window.innerHeight;
-                    this._camera.updateProjectionMatrix();
-                    this._renderer.setSize(window.innerWidth, window.innerHeight);
-                    window.isMobile = window.innerHeight > window.innerWidth;
-                }, resizeTimeout);
-            })
-        /**
-         * 
-         * window.addEventListener(
-            "resize",
-            () => {
-                
+                    if ((this._prevCanvasHeight > window.innerHeight || this._prevCanvasWidth > window.innerWidth)
+                        || (this._prevCanvasHeight * tolerance < window.innerHeight || this._prevCanvasWidth < window.innerWidth)) {
+                        this._prevCanvasHeight = window.innerHeight;
+                        this._prevCanvasWidth = window.innerWidth
+                        this._camera.aspect = window.innerWidth / window.innerHeight;
+                        this._camera.updateProjectionMatrix();
+                        this._renderer.setSize(window.innerWidth, window.innerHeight);
+                        window.isMobile = window.innerHeight > window.innerWidth;
+                    }
+                }, delay)
+
+
             },
             false
         );
-         */
+
 
     }
 
@@ -121,8 +128,8 @@ export class SceneRenderer {
         this._scene.add(directionalLight);
 
         // orbit control
-        const orbitcontrols = new OrbitControls(this._camera, this._canvas);
-        orbitcontrols.position0 = this._camera.position;
+        // const orbitcontrols = new OrbitControls(this._camera, this._canvas);
+        // orbitcontrols.position0 = this._camera.position;
 
 
         // ----------- STATIC FIXED POSITIONS ------------
@@ -135,30 +142,30 @@ export class SceneRenderer {
         const initialLookAtDragon = new Vector3(20, 0, 1);
 
 
-        // ----------------- TIME CHECKPOINTS ------------------
-        const globalEnd = 7;
-        const startTunnelMovement = 4;
-        const endTunnelMovement = 7;
-
         // ------------------- MESHES ---------------------
-
-
         this._clock = new THREE.Clock(true);
 
         this._addMesh(new FireComets());
         const tunnel = new Tunnel(new Vector3(100, 0, 95), 100, (3 * Math.PI) / 2)
-        // this._addMesh(tunnel);
+        this._addMesh(tunnel);
+        this._addMesh(new Spheres(false, dragonCenter, undefined, true));
+        this._addMesh(new Spheres(true, dragonCenter));
 
-        /*
         const dragon = new DragonGltf(dragonCenter, undefined, rotateDragon);
         this._addMesh(dragon);
-        this._addMesh(new Spheres(false, dragonCenter));
-        this._addMesh(new Spheres(true, dragonCenter));
-        */
+
+
         // --------------NON-STATIC POSITIONS --------------
         const checkpoints = tunnel.checkpoints;
         const tunnelPos = checkpoints[0];
+        
 
+        // ----------------- TIME CHECKPOINTS ------------------
+        const globalEnd = window.nSections - 1;
+        const endIntroAnimation = 2;
+        const startTunnelMovement = 4;
+        const endTunnelMovement = 7;
+        
 
         // ----------------- ANIMATIONS -------------------
         this.scrollTriggerVars = {};
@@ -176,21 +183,21 @@ export class SceneRenderer {
         this._camera.position.y = initialCameraPos.y;
         this._camera.position.z = initialCameraPos.z;
 
-        new MeshMovement([this._camera], new Vector3().copy(this._camera.position), cameraPos1, 0, 1, "camera intro movement", this);
-        new MeshMovement([this._camera], cameraPos1, dragonCenter, 1.5, 2, "Camera movement inside of dragon", this);
-        
+        new MeshMovement([this._camera], new Vector3().copy(this._camera.position), cameraPos1, 0, endIntroAnimation / 2, "camera intro movement", this);
+        new MeshMovement([this._camera], cameraPos1, dragonCenter, 0.75 * endIntroAnimation, endIntroAnimation, "Camera movement inside of dragon", this);
+
         const step = (endTunnelMovement - startTunnelMovement) / checkpoints.length;
         for (var i = 0; i < checkpoints.length; i++) {
-            const start = i == 0? dragonCenter: tunnel.getCheckpointAt(i - 1);
+            const start = i == 0 ? dragonCenter : tunnel.getCheckpointAt(i - 1);
             new MeshMovement([this._camera], start, tunnel.getCheckpointAt(i), startTunnelMovement + i * step, startTunnelMovement + (1 + i) * step, "dragon tunnel movement " + i, this);
         }
 
         // CAMERA LOOKATS
         this._camera.lookAt(dragonCenter);
         const lookAtLine = new AnimationLine(0, globalEnd, "landing page animation", this);
-        
-        lookAtLine.addAnimation(new CameraShift(this._camera, dragonCenter, dragonCenter), { start: 0, end: 1.75 }, "fixate camera after introduction animation");
-        lookAtLine.addAnimation(new CameraShift(this._camera, dragonCenter, tunnelPos), {start: 1.75, end: 1.8}, "Look at tunnel start");
+
+        lookAtLine.addAnimation(new CameraShift(this._camera, dragonCenter, dragonCenter), { start: 0, end: 1.5 }, "fixate camera during intro animation");
+        lookAtLine.addAnimation(new CameraShift(this._camera, dragonCenter, tunnelPos), { start: 1.5, end: 1.8 }, "Look at tunnel start");
 
         for (var i = 0; i < checkpoints.length; i++) {
             const line4 = new AnimationLine(startTunnelMovement + i * step, startTunnelMovement + (i + 1) * step, "dragon tunnel movement " + i, this);
@@ -203,7 +210,7 @@ export class SceneRenderer {
             start: 2,
             end: 4,
             obj: this._camera,
-            target: {fov: 160}
+            target: { fov: 160 }
         }
         this.scrollTriggerObjs["camFov2"] = {
             start: 6.5,
@@ -214,22 +221,22 @@ export class SceneRenderer {
         /********** CAMERA END **********/
 
 
-        /* 
+
         // @@@ Rotate dragon to the right @@@
 
 
-        
+
         function rotateDragon(mesh: Mesh, meshName: string) {
             const line3 = new AnimationLine(1, 3, "line3");
             mesh.lookAt(initialLookAtDragon);
             const rotationLookAt = new MeshLookAt([mesh], initialLookAtDragon, tunnelPos);
-            line3.addAnimation(rotationLookAt, { start: 1.75, end: 1.8 }, meshName)
+            line3.addAnimation(rotationLookAt, { start: 1.5, end: 1.8 }, meshName)
             const triggerVars = {}
             line3.registerScrollTriggerVars(triggerVars);
             window.animationRenderer.renderVars(triggerVars);
             vm._animationLines.push(line3);
         }
-        */
+
 
 
         this._registerAnimations();

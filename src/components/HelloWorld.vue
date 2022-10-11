@@ -42,7 +42,7 @@ function computeSizes() {
     fillerFontSize.val = Math.floor(singleRowHeight / 1.5) + 'px';
     heightFillerTextDiv.heightFillerTextDiv_ = Math.floor(100 / nRows) + "%";
 
-    h2FontSize.val =Math.floor(singleRowHeight / 2) + 'px';
+    h2FontSize.val = Math.floor(singleRowHeight / 2) + 'px';
 
     subtitleFontSize.val = Math.floor(singleRowHeight / 3.5) + 'px';
 }
@@ -51,35 +51,49 @@ function computeSizes() {
 
 onBeforeMount(() => { });
 const refSection = ref(null);
-
+const contentContainer: { value: HTMLElement } = ref(null);
 const headingFiller = ref(null);
-
+const nSections = window.nSections;
 const fillerFontSize = reactive({ val: '' })
-const h2FontSize = reactive({val: ''})
+const h2FontSize = reactive({ val: '' })
 const heightFillerTextDiv_ = '';
 const heightFillerTextDiv = reactive({ heightFillerTextDiv_ });
-const subtitleFontSize = reactive({val: ''})
-
+const subtitleFontSize = reactive({ val: '' })
 const c = 'rgba(160, 255, 150, 0.5)'
+const missingSections = reactive({ val: 0 });
 onMounted(() => {
     computeSizes();
+    if (contentContainer.value.childElementCount < nSections - 1) {
+        missingSections.val = nSections - 1 - contentContainer.value.childElementCount;
+        console.log(missingSections.val)
+    }
 
 });
 </script>
 
 <template>
     <div class="greetings">
-        <section id="start1" ref="refSection" > </section>
-        <content-section :msgs="['BEATS BOUTIQUE', '', 'Trap Beats & more' ,'', 'by prodbycctv', '', '', '', '', '⌄⌄ Scroll for Beats ⌄⌄']" :n-rows="10"/>
-        <section  id="start2" > </section>
-        <content-section :msgs="['Have a safe trip', '', 'Имате безопасно' ,'', 'Eine gute Reise', '', '一路平安', '', '', '⌄⌄ Discover more ⌄⌄']" :n-rows="10"/>
-        <section  > </section>
-        <section  > </section>
-        <section  > </section>
-        <!--<entertainment-section :tracks="beatsMetadata" />
-        <entertainment-section :tracks="beatsMetadata2" /> -->
-        
-        <section  > 
+        <div ref="contentContainer">
+            <section id="start1" ref="refSection"> </section>
+            <content-section
+                :msgs="['BEATS BOUTIQUE', '', 'Trap Beats & more' ,'', 'by prodbycctv', '', '', '', '', '']"
+                :n-rows="10" />
+            <content-section
+                :msgs="['', '', '' ,'', '', '', '', '', '', '⌄⌄ Scroll for Beats ⌄⌄']"
+                :n-rows="10" />
+            <section id="start2"> </section>
+
+            <section> </section>
+
+            <!--<entertainment-section :tracks="beatsMetadata" />
+            <entertainment-section :tracks="beatsMetadata2" /> -->
+        </div>
+
+        <div v-for="n in missingSections.val">
+            <section> </section>
+        </div>
+
+        <section>
             <about />
         </section>
     </div>

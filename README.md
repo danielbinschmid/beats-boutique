@@ -58,4 +58,8 @@ npm run test:e2e # or `npm run test:e2e:ci` for headless testing
 npm run lint
 ```
 
-
+## Possible optimizations:
+- Precompute fire comet vertex position adjustment, i.e. stretch in y-direction and belly widening factor
+- Precompute tunnel ring rotation
+- bake lookAts to rotations
+- change movement direction of dragon rings or stop ring movement on scroll
