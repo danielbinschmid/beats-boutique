@@ -17,7 +17,7 @@ import { DragonGltf } from "@/canvas/gltf/Dragon";
 import { MeshBase } from "../meshes/MeshBase";
 import { AnimationBase } from "./AnimationBase";
 
-export class CameraZoom extends AnimationBase {
+export class CameraMovement extends AnimationBase {
 	_speed: number;
 	_finalTargetPos: Vector3;
 	_curTargetPos: Vector3;
@@ -28,8 +28,12 @@ export class CameraZoom extends AnimationBase {
 	_fixatePos: Vector3 | undefined;
 	_fixatePosOrigin: Vector3;
 	/**
-	 * Cur varies between 0.0 and 1.0, 0.0 is start
-	 */
+     * 
+     * @param startPos - start position of movement
+     * @param targetPos - target position of movement
+     * @param camera - camera to move
+     * @param fixatePos - optional, position to lookat during movement
+     */
 	constructor(
 		startPos: Vector3,
 		targetPos: Vector3,

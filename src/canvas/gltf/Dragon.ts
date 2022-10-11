@@ -4,7 +4,7 @@ import { Clock, Mesh, Scene, ShaderMaterial, SkinnedMesh, Vector3 } from "three"
 import fragmentShader from "@/shader/dragon/dragonFragment.glsl?raw";
 import vertexShader from "@/shader/dragon/dragonVertex.glsl?raw";
 import toothFragment from "@/shader/sphere/sphereFragment.glsl?raw";
-import fireFragment from "@/shader/fire/firefliesFragment.glsl?raw";
+import fireFragment from "@/shader/fire/firecometsFragment.glsl?raw";
 import eyesVertex from "@/shader/dragon/eyesVertex.glsl?raw";
 import { AnimationBase } from "@/canvas/animations/AnimationBase";
 import { DirectAnimationBase } from "@/canvas/animations/DirectAnimationBase";

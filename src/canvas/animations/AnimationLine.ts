@@ -1,3 +1,4 @@
+import { SceneRenderer } from "../scenes/SceneRenderer";
 import { AnimationBase } from "./AnimationBase";
 
 declare type AnimationVars = {
@@ -19,13 +20,18 @@ export class AnimationLine {
     _globalStart: number;
     _nAnimations: number;
     _id: string;
-	constructor(globalStart: number, globalTermination: number, id:string) {
+
+	constructor(globalStart: number, globalTermination: number, id:string, scene: undefined | SceneRenderer = undefined) {
         this._nAnimations = 0;
 		this._animations = {};
         this._scrollVars = {}
 		this._globalTermination = globalTermination;
         this._globalStart = globalStart;
         this._id = id;
+
+        if (scene != undefined) {
+            scene._animationLines.push(this);
+        }
 	}
 
     update(globalTime: number) {

@@ -70,8 +70,7 @@ onMounted(() => {
 <template>
     <div class="greetings">
         <section id="start1" ref="refSection" > </section>
-        <content-section :msgs="['BEAT BOUTIQUE', '', 'Trap Beats & more' ,'', 'by prodbycctv, Zeno & other', '', '', '', '', '⌄⌄ Scroll for Beats ⌄⌄']" :n-rows="10"/>
-        <!--<filler-section :msg="'EXPLORE'" /> -->
+        <content-section :msgs="['BEATS BOUTIQUE', '', 'Trap Beats & more' ,'', 'by prodbycctv', '', '', '', '', '⌄⌄ Scroll for Beats ⌄⌄']" :n-rows="10"/>
         <section  id="start2" > </section>
         <content-section :msgs="['Have a safe trip', '', 'Имате безопасно' ,'', 'Eine gute Reise', '', '一路平安', '', '', '⌄⌄ Discover more ⌄⌄']" :n-rows="10"/>
         <section  > </section>

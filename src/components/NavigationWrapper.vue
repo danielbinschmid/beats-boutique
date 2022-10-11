@@ -7,6 +7,8 @@ Inspired from: https://tympanus.net/codrops/2013/08/28/transitions-for-off-canva
 there are still some quirks for animation 3, 6, 7, 8 & 14 
 as they do not animate back gracefully  
 (those are the navs in the div with class st-pusher)
+
+https://codepen.io/kyunwang/pen/zNOoxb
 */
 
 onMounted(() => {
@@ -63,12 +65,8 @@ window.addEventListener('resize', () => {
             </nav>
 
             <div class="st-pusher">
-
-
-
-
                 <slot name="content"></slot>
-                <div class="square"> </div>
+
                 <div id="st-trigger-effects" class="menu-btn">
                     <button data-effect="st-effect-1" class="btn" type="button">
                         Menu
@@ -87,7 +85,6 @@ window.addEventListener('resize', () => {
     border: none;
     color:rgba(173, 216, 230, 0.5);
     background-color: rgba(0, 0, 0, 0);
-
     font-size: xx-large;
     cursor: pointer;
     display: inline-block;
@@ -102,19 +99,16 @@ window.addEventListener('resize', () => {
     -moz-border-radius-bottomleft: 0px;
     -webkit-border-radius: 10px 10px 10px 10px;
     border-radius: 10px 10px 10px 10px;
-    
     background-color: rgba(100, 100, 100, 0.4);
 }
 
 
 .menu-btn {
-    
     position: fixed;
     top: 0;
     right: 0;
     mix-blend-mode: difference;
     background-color: rgba(100, 100, 100, 0);
-
 }
 
 
@@ -129,7 +123,7 @@ window.addEventListener('resize', () => {
     right: 0;
     width: 0;
     height: 0;
-    filter: blur(100vw);
+    filter: blur(100px);
     background: rgba(0, 240, 255, 0.5);
     mix-blend-mode: difference;
     content: '';

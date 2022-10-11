@@ -1,14 +1,15 @@
 
 import * as THREE from "three";
-import { Clock, Mesh, Scene, ShaderMaterial, SkinnedMesh, Vector3 } from "three";
+import { Camera, Clock, Mesh, Scene, ShaderMaterial, SkinnedMesh, Vector3 } from "three";
 import fragmentShader from "@/shader/dragon/dragonFragment.glsl?raw";
 import vertexShader from "@/shader/dragon/dragonVertex.glsl?raw";
 
 import { AnimationBase } from "@/canvas/animations/AnimationBase";
 import { DirectAnimationBase } from "@/canvas/animations/DirectAnimationBase";
+import { SceneRenderer } from "../scenes/SceneRenderer";
 
 export class MeshMovement extends DirectAnimationBase {
-    constructor(meshes: Mesh[], startPos: Vector3, endPos: Vector3, start: number, end: number, id: string="MeshMovement") {
+    constructor(meshes: (Mesh | Camera)[], startPos: Vector3, endPos: Vector3, start: number, end: number, id: string="MeshMovement", scene: undefined | SceneRenderer = undefined) {
         const trigger: {
             obj: any,
             target: any,
@@ -29,5 +30,9 @@ export class MeshMovement extends DirectAnimationBase {
             i++;
         }
         super(trigger, start, end, id);
+
+        if (scene != undefined) {
+            this.registerScrollTriggerVars(scene.scrollTriggerObjs);
+        }
     }
 }

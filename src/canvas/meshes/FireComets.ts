@@ -1,8 +1,8 @@
 import * as THREE from "three";
 
 import { InstancedMesh, Matrix4, Scene, Vector3 } from "three";
-import sphereVertex from "@/shader/fire/firefliesVertex.glsl?raw";
-import sphereFragment from "@/shader/fire/firefliesFragment.glsl?raw";
+import sphereVertex from "@/shader/fire/firecometsVertex.glsl?raw";
+import sphereFragment from "@/shader/fire/firecometsFragment.glsl?raw";
 import { MeshBase } from "./MeshBase";
 
 
@@ -10,7 +10,7 @@ function mod(n, d) {
     return ((n % d) + d) % d;
 }
 
-export class Fireflies extends MeshBase {
+export class FireComets extends MeshBase {
 	_uniforms;
 	_clock;
 	_material;
