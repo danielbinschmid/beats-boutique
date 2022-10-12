@@ -78,12 +78,11 @@ onMounted(() => {
             <content-section
                 :msgs="['BEATS BOUTIQUE', '', 'Trap Beats & more' ,'', 'by prodbycctv', '', '', '', '', '']"
                 :n-rows="10" />
-            <content-section
-                :msgs="['', '', '' ,'', '', '', '', '', '', '⌄⌄ Scroll for Beats ⌄⌄']"
-                :n-rows="10" />
+            <entertainment-section :tracks="beatsMetadata2" />
             <section id="start2"> </section>
 
             <section> </section>
+
 
             <!--<entertainment-section :tracks="beatsMetadata" />
             <entertainment-section :tracks="beatsMetadata2" /> -->

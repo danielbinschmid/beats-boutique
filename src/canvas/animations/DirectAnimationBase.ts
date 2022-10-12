@@ -1,10 +1,12 @@
+import { ObjAnimationParams } from "@/types";
+
 export class DirectAnimationBase {
-	trigger: { obj: {}; target: {}; id: string }[];
+	trigger: ObjAnimationParams[];
 	start: number;
 	end: number;
 	id: string;
 	constructor(
-		trigger: { obj: {}; target: {}; id: string }[],
+		trigger: ObjAnimationParams[],
 		start: number,
 		end: number,
 		id: string

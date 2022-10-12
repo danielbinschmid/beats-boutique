@@ -4,6 +4,7 @@ import { SceneRenderer } from "../scenes/SceneRenderer";
 export class AnimationRenderer {
 	_timeline: gsap.core.Timeline;
 	_allVars: any[];
+    _progress: number;
 	constructor() {
 		//runtime
 		gsap.registerPlugin(ScrollTrigger);
@@ -21,7 +22,12 @@ export class AnimationRenderer {
 			},
 		});
 		this._timeline = tl1;
-	}
+
+        this._progress = 0;
+        ScrollTrigger.addEventListener("refreshInit", () => this._progress = tl1.scrollTrigger.progress);
+        ScrollTrigger.addEventListener("refresh", () => tl1.scrollTrigger.scroll(this._progress * ScrollTrigger.maxScroll(window)));
+        // const ST = ScrollTrigger.create()
+    }
 
 	/**
 	 * Target contains target variables, and target values.
@@ -38,7 +44,7 @@ export class AnimationRenderer {
 		this._allVars.push(objs);
 		for (let key in objs) {
 			const obj = objs[key];
-			obj.target["ease"] = Linear.easeNone;
+			obj.target["ease"] = obj.target["ease"]? obj.target["ease"]: Linear.easeNone;
 			obj.target["duration"] = obj.end - obj.start;
 			this._timeline.to(obj.obj, obj.target, obj.start);
 		}
@@ -50,16 +56,18 @@ export class AnimationRenderer {
 			end: number;
 			to: number;
 			value: number;
+            ease?: gsap.EaseFunction
 		};
 	}) {
 		// this._allVars.push(vars);
 		for (let key in vars) {
 			const val = vars[key];
+            const ease = val.ease? val.ease: Linear.easeNone;
 			this._timeline.to(
 				val,
 				{
 					value: val.to,
-					ease: Linear.easeNone,
+					ease: ease,
 					duration: val.end - val.start,
 				},
 				val.start

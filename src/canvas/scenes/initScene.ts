@@ -1,0 +1,209 @@
+import { Color, ColorRepresentation, Mesh, Vector3 } from "three";
+import { SceneRenderer } from "./SceneRenderer";
+import * as THREE from "three";
+import { FireComets } from "../meshes/FireComets";
+import { Tunnel } from "../meshes/Tunnel";
+import { Spheres } from "../meshes/Spheres";
+import { DragonGltf } from "../gltf/Dragon";
+import { MeshMovement } from "../animations/MeshMovement";
+import * as gsap from "gsap";
+import { AnimationLine } from "../animations/AnimationLine";
+import { CameraShift } from "../animations/CameraShift";
+import { MeshLookAt } from "../animations/MeshLookAt";
+import { camFovAnimation } from "../animations/CamFovAnimation";
+
+export function initScene(renderer: SceneRenderer) {
+    // initialize parameter holder
+    
+    const vm = renderer;
+    
+
+    // background color
+    const backgroundColor: ColorRepresentation = new Color(0.9, 0.9, 1); // rgb(240, 248, 255) rgb(229.5, 229.5, 255)
+    renderer._renderer.setClearColor(backgroundColor);
+
+    // add light
+    const light = new THREE.AmbientLight(new THREE.Color(100, 0, 0), 0.01); // soft white light
+    renderer._scene.add(light);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    renderer._scene.add(directionalLight);
+
+    // orbit control
+    // const orbitcontrols = new OrbitControls(renderer._camera, renderer._canvas);
+    // orbitcontrols.position0 = renderer._camera.position;
+
+
+    // ----------- STATIC FIXED POSITIONS ------------
+    // camera
+    const initialCameraPos: Vector3 = new Vector3(0, -10, 20);  // Starting position of camera
+    const cameraPos1 = new Vector3(40, 0, 40); // position of camera after first movement in introduction animation
+
+    const cameraPosBehindDragon = new Vector3(-20, 0, 10);
+
+    // dragon pos
+    const dragonCenter = new Vector3(20, 0, -10); // dragon position
+    const initialLookAtDragon = new Vector3(20, 0, 1);
+
+
+    // ------------------- MESHES ---------------------
+    renderer._clock = new THREE.Clock(true);
+
+    renderer._addMesh(new FireComets());
+    const tunnel = new Tunnel(new Vector3(100, 0, 95), 100, (3 * Math.PI) / 2)
+    renderer._addMesh(tunnel);
+    renderer._addMesh(new Spheres(false, dragonCenter, undefined, true));
+    renderer._addMesh(new Spheres(true, dragonCenter));
+
+    const dragon = new DragonGltf(dragonCenter, undefined, rotateDragon);
+    renderer._addMesh(dragon);
+
+
+    // --------------NON-STATIC POSITIONS --------------
+    const checkpoints = tunnel.checkpoints;
+    const tunnelPos = checkpoints[0];
+
+
+    
+    // ----------------- TIME CHECKPOINTS ------------------
+    const globalEnd = window.nSections - 1;
+
+    // camera movements
+    const endIntroMovement = 1;
+
+    const startMovementBehindDragon = 2.5;
+    const endMovementBehindDragon = 3;
+
+    const startMovementToDragon = 3;
+    const endMovementToDragon = 3.8;
+
+    const startTunnelMovement = 5;
+    const endTunnelMovement = 8;
+
+    // lookats
+    const endLookAtDragon = 3;
+    const endLookAtTunnel = 3.8;
+
+    const endDragonLookAtInitial = 3;
+    const endDragonLookAtTunnel = 3.8;
+
+    // cam. fov
+    const zoomOut = { start: 4, end: startTunnelMovement };
+    const zoomIn = { start: endTunnelMovement - 0.5, end: endTunnelMovement };
+
+
+    const tunnelMovementDuration = 1.5;
+    const breakDuration = 0.5;
+    const zoomDuration = 0.5;
+
+
+    // first move behind dragon
+    // then move inside dragon and look at tunnel
+    // ----------------- ANIMATIONS -------------------
+    renderer.scrollTriggerVars = {};
+    renderer.scrollTriggerVars["global"] = {
+        start: 0,
+        end: globalEnd,
+        to: globalEnd,
+        value: 0,
+    };
+
+    /********** CAMERA **********/
+
+    // CAMERA MOVEMENTS
+    renderer._camera.position.x = initialCameraPos.x;
+    renderer._camera.position.y = initialCameraPos.y;
+    renderer._camera.position.z = initialCameraPos.z;
+
+    new MeshMovement([renderer._camera], {
+        startPos: new Vector3().copy(renderer._camera.position),
+        endPos: cameraPos1,
+        start: 0,
+        end: endIntroMovement,
+        id: "camera intro movement",
+        scene: renderer
+    });
+
+    new MeshMovement([renderer._camera], {
+        startPos: cameraPos1,
+        endPos: cameraPosBehindDragon,
+        start: startMovementBehindDragon,
+        end: endMovementBehindDragon,
+        id: "move cam behind the dragon",
+        scene: renderer,
+    });
+
+    new MeshMovement([renderer._camera], {
+        startPos: cameraPosBehindDragon,
+        endPos: dragonCenter,
+        start: startMovementToDragon,
+        end: endMovementToDragon,
+        id: "Camera movement inside of dragon",
+        scene: renderer,
+        ease: gsap.Power2.easeInOut
+    });
+
+    const step = (endTunnelMovement - startTunnelMovement) / checkpoints.length;
+    for (var i = 0; i < checkpoints.length; i++) {
+        const start = i == 0 ? dragonCenter : tunnel.getCheckpointAt(i - 1);
+        new MeshMovement([renderer._camera], {
+            startPos: start,
+            endPos: tunnel.getCheckpointAt(i),
+            start: startTunnelMovement + i * step,
+            end: startTunnelMovement + (1 + i) * step,
+            id: "dragon tunnel movement " + i,
+            scene: renderer,
+        });
+    }
+
+    // CAMERA LOOKATS
+    renderer._camera.lookAt(dragonCenter);
+    const lookAtLine = new AnimationLine(0, globalEnd, "landing page animation", renderer);
+
+    lookAtLine.addAnimation(new CameraShift(renderer._camera, dragonCenter, dragonCenter), { start: 0, end: endLookAtDragon }, "fixate camera during intro animation");
+    lookAtLine.addAnimation(new CameraShift(renderer._camera, dragonCenter, tunnelPos), { start: endLookAtDragon, end: endLookAtTunnel }, "Look at tunnel start");
+
+    for (var i = 0; i < checkpoints.length; i++) {
+        const line4 = new AnimationLine(startTunnelMovement + i * step, startTunnelMovement + (i + 1) * step, "dragon tunnel movement " + i, renderer);
+        const lookAt_ = new MeshLookAt([vm._camera], tunnel.getCheckpointAt(i), tunnel.getCheckpointAt(i + 1));
+        line4.addAnimation(lookAt_, { start: startTunnelMovement + i * step, end: startTunnelMovement + (i + 1) * step }, "dragonlookat" + i);
+    }
+   
+
+    // OTHER CAMERA ANIMATIONS
+    camFovAnimation(renderer._camera, {
+        start: zoomOut.start,
+        end: zoomOut.end,
+        targetFov: 160,
+        scene: renderer,
+        id: "fovLineIn",
+        animationLine: undefined
+    })
+
+    camFovAnimation(renderer._camera, {
+        start: zoomIn.start,
+        end: zoomIn.end,
+        targetFov: 20,
+        scene: renderer,
+        id: "fovLineOut",
+        animationLine: undefined
+    })
+    
+    /********** CAMERA END **********/
+
+
+
+    // @@@ Rotate dragon to the right @@@
+
+    function rotateDragon(mesh: Mesh, meshName: string) {
+        const line3 = new AnimationLine(endDragonLookAtInitial, endDragonLookAtTunnel, "line3");
+        mesh.lookAt(initialLookAtDragon);
+        const rotationLookAt = new MeshLookAt([mesh], initialLookAtDragon, tunnelPos);
+        line3.addAnimation(rotationLookAt, { start: endDragonLookAtInitial, end: endDragonLookAtTunnel }, meshName)
+        const triggerVars = {}
+        line3.registerScrollTriggerVars(triggerVars);
+        window.animationRenderer.renderVars(triggerVars);
+        vm._animationLines.push(line3);
+    }
+    
+    renderer._registerAnimations();
+}

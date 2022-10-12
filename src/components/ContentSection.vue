@@ -63,7 +63,7 @@ onMounted(() => {
         <div ref="introSection">
             <vue-section :borderTop_="false"  :msg="'nothing'">
                 <div v-for="(item, i) in msgs" :key="i"
-                    :style="{height: heightFillerTextDiv.heightFillerTextDiv_}" ref="headingFiller">
+                    :style="{height: heightFillerTextDiv.heightFillerTextDiv_}" ref="headingFiller" class="m">
                     <h2 :style="{fontSize: fillerFontSize.val }"> {{item}} </h2>
 
                 </div>
@@ -78,4 +78,5 @@ h2 {
     font-weight: bold;
     text-align: center;
 }
+
 </style>

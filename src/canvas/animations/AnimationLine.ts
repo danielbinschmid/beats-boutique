@@ -20,11 +20,12 @@ export class AnimationLine {
     _globalStart: number;
     _nAnimations: number;
     _id: string;
-
+    _callbacks: any[];
 	constructor(globalStart: number, globalTermination: number, id:string, scene: undefined | SceneRenderer = undefined) {
         this._nAnimations = 0;
 		this._animations = {};
         this._scrollVars = {}
+        this._callbacks = [];
 		this._globalTermination = globalTermination;
         this._globalStart = globalStart;
         this._id = id;
@@ -39,7 +40,14 @@ export class AnimationLine {
             for (const id in this._animations) {
                 this._animations[id].update(this._scrollVars[id].value);
             }
+            for (const callback of this._callbacks) {
+                callback(globalTime);
+            }
         }
+    }
+
+    addCallback(callback) {
+        this._callbacks.push(callback);
     }
 
 	addAnimation(animation: AnimationBase, animationVars: AnimationVars, id_=undefined) {

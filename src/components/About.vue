@@ -23,6 +23,7 @@
 h2 {
 font-size:x-large;
 margin-bottom: 1%;
+position: sticky;
 }
 
 h3 {
