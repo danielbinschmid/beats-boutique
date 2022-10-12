@@ -11,6 +11,7 @@ import { AnimationLine } from "../animations/AnimationLine";
 import { CameraShift } from "../animations/CameraShift";
 import { MeshLookAt } from "../animations/MeshLookAt";
 import { camFovAnimation } from "../animations/CamFovAnimation";
+import { CamFovAnimationOptions, MeshMovementOptions } from "@/types";
 
 export function initScene(renderer: SceneRenderer) {
     // initialize parameter holder
@@ -76,8 +77,8 @@ export function initScene(renderer: SceneRenderer) {
     const startMovementToDragon = 3;
     const endMovementToDragon = 3.8;
 
-    const startTunnelMovement = 5;
-    const endTunnelMovement = 8;
+    const startTunnelMovement = 4;
+    const endTunnelMovement = 12;
 
     // lookats
     const endLookAtDragon = 3;
@@ -93,8 +94,11 @@ export function initScene(renderer: SceneRenderer) {
 
     const tunnelMovementDuration = 1.5;
     const breakDuration = 0.5;
-    const zoomDuration = 0.5;
-
+    const zoomDuration = 0;
+    const nTunnelCheckpoints = 3;
+    const nBeats = 1;
+    const beatSectionDuration = 2;
+    const enterHyperspaceDuration = 1;
 
     // first move behind dragon
     // then move inside dragon and look at tunnel
@@ -142,51 +146,67 @@ export function initScene(renderer: SceneRenderer) {
         ease: gsap.Power2.easeInOut
     });
 
-    const step = (endTunnelMovement - startTunnelMovement) / checkpoints.length;
-    for (var i = 0; i < checkpoints.length; i++) {
-        const start = i == 0 ? dragonCenter : tunnel.getCheckpointAt(i - 1);
-        new MeshMovement([renderer._camera], {
-            startPos: start,
-            endPos: tunnel.getCheckpointAt(i),
-            start: startTunnelMovement + i * step,
-            end: startTunnelMovement + (1 + i) * step,
-            id: "dragon tunnel movement " + i,
-            scene: renderer,
-        });
-    }
 
     // CAMERA LOOKATS
     renderer._camera.lookAt(dragonCenter);
-    const lookAtLine = new AnimationLine(0, globalEnd, "landing page animation", renderer);
+    const lookAtLine = new AnimationLine(0, endLookAtTunnel, "landing page animation", renderer);
 
     lookAtLine.addAnimation(new CameraShift(renderer._camera, dragonCenter, dragonCenter), { start: 0, end: endLookAtDragon }, "fixate camera during intro animation");
     lookAtLine.addAnimation(new CameraShift(renderer._camera, dragonCenter, tunnelPos), { start: endLookAtDragon, end: endLookAtTunnel }, "Look at tunnel start");
 
-    for (var i = 0; i < checkpoints.length; i++) {
-        const line4 = new AnimationLine(startTunnelMovement + i * step, startTunnelMovement + (i + 1) * step, "dragon tunnel movement " + i, renderer);
-        const lookAt_ = new MeshLookAt([vm._camera], tunnel.getCheckpointAt(i), tunnel.getCheckpointAt(i + 1));
-        line4.addAnimation(lookAt_, { start: startTunnelMovement + i * step, end: startTunnelMovement + (i + 1) * step }, "dragonlookat" + i);
+    // jump through beats
+    var curTime = startTunnelMovement + enterHyperspaceDuration;
+    // const fovLine = new AnimationLine(startTunnelMovement, endTunnelMovement, "tunnelDiscovery", renderer);
+
+    camFovAnimation(renderer._camera, {
+        start: startTunnelMovement,
+        end: startTunnelMovement + enterHyperspaceDuration,
+        targetFov: 120,
+        scene: renderer,
+        id: "fovIn",
+        animationLine: undefined,
+    });
+
+    // camFovAnimation(renderer._camera, {
+    //     start: curTime + zoomDuration - breakDuration + tunnelMovementDuration,
+    //     end: curTime + zoomDuration + tunnelMovementDuration,
+    //     targetFov: 100,
+    //     scene: renderer,
+    //     id: "fovIn" + b,
+    //     animationLine: undefined
+    // });
+
+    for (var b = 0; b < nBeats; b++) {
+
+        // Movement
+        for (var c = 0; c < nTunnelCheckpoints; c++) {
+            const start = curTime + (c / nTunnelCheckpoints) * tunnelMovementDuration
+            const end = curTime + zoomDuration + ((c + 1) / nTunnelCheckpoints) * tunnelMovementDuration
+
+            const moveOpts: MeshMovementOptions = {
+                startPos: b == 0 && c == 0 ? dragonCenter: tunnel.getCheckpointAt((nTunnelCheckpoints) * b + c - 1),
+                endPos: tunnel.getCheckpointAt((nTunnelCheckpoints) * b + c),
+                start:start,
+                end: end,
+                id: "tunnel movement for beat " + b + " and ring " + c,
+                scene: renderer,
+            }
+           new MeshMovement([renderer._camera], moveOpts);
+
+            // lookat
+            const l = new AnimationLine(start, end, "c" + c + "b" + b, renderer);
+            const lookat = new MeshLookAt([renderer._camera], tunnel.getCheckpointAt((nTunnelCheckpoints) * b + c), tunnel.getCheckpointAt((nTunnelCheckpoints) * b + c + 1));
+            l.addAnimation(lookat, {start: start, end: end}, "lookat " + c + " for beat " + b);
+
+            console.log((nTunnelCheckpoints) * b + c)
+        }   
+
+        
+
+        curTime += zoomDuration + tunnelMovementDuration + beatSectionDuration;
     }
-   
 
-    // OTHER CAMERA ANIMATIONS
-    camFovAnimation(renderer._camera, {
-        start: zoomOut.start,
-        end: zoomOut.end,
-        targetFov: 160,
-        scene: renderer,
-        id: "fovLineIn",
-        animationLine: undefined
-    })
-
-    camFovAnimation(renderer._camera, {
-        start: zoomIn.start,
-        end: zoomIn.end,
-        targetFov: 20,
-        scene: renderer,
-        id: "fovLineOut",
-        animationLine: undefined
-    })
+ 
     
     /********** CAMERA END **********/
 
@@ -205,5 +225,5 @@ export function initScene(renderer: SceneRenderer) {
         vm._animationLines.push(line3);
     }
     
-    renderer._registerAnimations();
+    
 }

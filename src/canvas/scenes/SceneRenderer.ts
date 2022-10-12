@@ -118,10 +118,15 @@ export class SceneRenderer {
         this.scrollTriggerObjs = {}
     }
 
+    _initScene() {
+        initScene(this);
+        this._registerAnimations();
+    }
+
     constructor() {
         // initialize
         this._initRenderer();
-        initScene(this);
+        this._initScene();
         const vm = this;
         window.addEventListener("scroll", () => {
             requestAnimationFrame(() => {

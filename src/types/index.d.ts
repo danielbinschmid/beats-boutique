@@ -32,5 +32,6 @@ declare type CamFovAnimationOptions = {
     targetFov: number;
     scene: SceneRenderer;
     id: string;
-    animationLine?: AnimationLine
+    animationLine?: AnimationLine;
+    ease?: gsap.EaseFunction
 }

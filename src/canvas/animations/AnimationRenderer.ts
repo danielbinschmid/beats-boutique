@@ -1,4 +1,5 @@
 import { gsap, Linear } from "gsap";
+import * as gsap_ from "gsap";
 import { ScrollTrigger } from "gsap/all";
 import { SceneRenderer } from "../scenes/SceneRenderer";
 export class AnimationRenderer {
@@ -11,18 +12,25 @@ export class AnimationRenderer {
 		// const timelineVars: GSAPTimelineVars = {}
 		// const scrollTriggerVars: ScrollTrigger.Vars = {};
 		this._allVars = [];
-		const tl1 = gsap.timeline({
+        const v: ScrollTrigger.Vars = {}
+        const factor = (1 / (window.nSections - 1))
+        const tl1 = gsap.timeline({
 			defaults: { duration: 1 },
 			duration: window.nSections - 1,
 			scrollTrigger: {
 				trigger: "start1",
 				scrub: true,
+                snap: {
+                    snapTo: [0, factor, 2 * factor, 3 * factor, 5 * factor, 6 * factor, 7 * factor],
+                    duration: 1,
+                    directional: true,
+                    ease: "power1"
+                },
 				start: "top top",
 				end: "bottom bottom",
 			},
 		});
 		this._timeline = tl1;
-
         this._progress = 0;
         ScrollTrigger.addEventListener("refreshInit", () => this._progress = tl1.scrollTrigger.progress);
         ScrollTrigger.addEventListener("refresh", () => tl1.scrollTrigger.scroll(this._progress * ScrollTrigger.maxScroll(window)));
