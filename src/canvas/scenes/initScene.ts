@@ -78,7 +78,7 @@ export function initScene(renderer: SceneRenderer) {
     const endMovementToDragon = 3.8;
 
     const startTunnelMovement = 4;
-    const endTunnelMovement = 12;
+    const endTunnelMovement = 11;
 
     // lookats
     const endLookAtDragon = 3;
@@ -88,16 +88,16 @@ export function initScene(renderer: SceneRenderer) {
     const endDragonLookAtTunnel = 3.8;
 
     // cam. fov
-    const zoomOut = { start: 4, end: startTunnelMovement };
-    const zoomIn = { start: endTunnelMovement - 0.5, end: endTunnelMovement };
+    // const zoomOut = { start: 4, end: startTunnelMovement };
+   //  const zoomIn = { start: endTunnelMovement - 0.5, end: endTunnelMovement };
 
 
-    const tunnelMovementDuration = 1.5;
+    const tunnelMovementDuration = 1;
     const breakDuration = 0.5;
     const zoomDuration = 0;
-    const nTunnelCheckpoints = 3;
-    const nBeats = 1;
-    const beatSectionDuration = 2;
+    const nTunnelCheckpoints = 2;
+    const nBeats = 5;
+    const beatSectionDuration = 0;
     const enterHyperspaceDuration = 1;
 
     // first move behind dragon
@@ -195,10 +195,10 @@ export function initScene(renderer: SceneRenderer) {
 
             // lookat
             const l = new AnimationLine(start, end, "c" + c + "b" + b, renderer);
-            const lookat = new MeshLookAt([renderer._camera], tunnel.getCheckpointAt((nTunnelCheckpoints) * b + c), tunnel.getCheckpointAt((nTunnelCheckpoints) * b + c + 1));
+            const lookat = new MeshLookAt([renderer._camera], tunnel.getCheckpointAt((nTunnelCheckpoints) * b + c - 0.5), tunnel.getCheckpointAt((nTunnelCheckpoints) * b + c + 0.5));
             l.addAnimation(lookat, {start: start, end: end}, "lookat " + c + " for beat " + b);
 
-            console.log((nTunnelCheckpoints) * b + c)
+            console.log(b * nTunnelCheckpoints + c);
         }   
 
         

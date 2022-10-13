@@ -31,6 +31,12 @@ function getFarNearPlane(cam: PerspectiveCamera) {
     return res;
 }
 
+declare type SongCardWorldPos = {
+    position: Vector3,
+    rotation?: Vector3,
+    scaling?: Vector3,
+    lookAt?: Vector3
+}
 
 export class SongCard extends MeshBase {
     _cardMesh: Mesh;
@@ -38,12 +44,15 @@ export class SongCard extends MeshBase {
     _globalRotation;
     _scaling: Vector3;
     _textMesh: Mesh;
+    _lookAt?: Vector3
 
-    constructor(position: Vector3, rotation: Vector3, scaling?: Vector3) {
+
+    constructor(pos: SongCardWorldPos) {
         super();
-        this._globalPosition = position;
-        this._globalRotation = rotation;
-        this._scaling = scaling ? scaling : new Vector3(30, 40, 0);
+        this._globalPosition = pos.position;
+        this._globalRotation = pos.rotation;
+        this._lookAt = pos.lookAt;
+        this._scaling = pos.scaling ? pos.scaling : new Vector3(30, 40, 0);
         this._init()
     }
 
@@ -53,14 +62,20 @@ export class SongCard extends MeshBase {
         const geometry = new PlaneGeometry(1, 1, 2, 2);
         const mesh = new Mesh(geometry, new THREE.LineBasicMaterial({ transparent: true }))
         this._cardMesh = mesh;
-        this._cardMesh.position.setX(this._globalPosition.x - 0.5);
-        this._cardMesh.position.setY(this._globalPosition.y - 0.5);
+        this._cardMesh.position.setX(this._globalPosition.x);
+        this._cardMesh.position.setY(this._globalPosition.y);
         this._cardMesh.position.setZ(this._globalPosition.z);
 
+        if (this._globalRotation != undefined) {
+            this._cardMesh.rotateX(this._globalRotation.x);
+            this._cardMesh.rotateY(this._globalRotation.y);
+            this._cardMesh.rotateZ(this._globalRotation.z); 
+        }
+        if (this._lookAt != undefined) {
+            this._cardMesh.lookAt(this._lookAt);
+        }
 
-        this._cardMesh.rotateX(this._globalRotation.x);
-        this._cardMesh.rotateY(this._globalRotation.y);
-        this._cardMesh.rotateZ(this._globalRotation.z);
+
 
 
         this._cardMesh.scale.x = this._scaling.x;

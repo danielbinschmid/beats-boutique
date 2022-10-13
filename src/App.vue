@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router";
 
-window.nSections = 13;
+window.nSections = 11;
 
 
 

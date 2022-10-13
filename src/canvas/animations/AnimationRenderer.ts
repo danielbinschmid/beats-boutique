@@ -21,7 +21,7 @@ export class AnimationRenderer {
 				trigger: "start1",
 				scrub: true,
                 snap: {
-                    snapTo: [0, factor, 2 * factor, 3 * factor, 5 * factor, 6 * factor, 7 * factor],
+                    snapTo: [0, factor, 2 * factor, 3 * factor, 5 * factor, 6 * factor, 7 * factor, 8 * factor, 9 * factor, 10 * factor],
                     duration: 1,
                     directional: true,
                     ease: "power1"
