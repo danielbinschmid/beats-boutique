@@ -113,6 +113,10 @@ export class SceneRenderer {
             false
         );
 
+        // orbit control
+        const orbitcontrols = new OrbitControls(this._camera, this._canvas);
+        orbitcontrols.position0 = this._camera.position;
+
         this._animationLines = [];
         this._meshes = [];
         this.scrollTriggerObjs = {}

@@ -6,6 +6,7 @@ import sphereFragment from "@/shader/tunnel/sphereFragment.glsl?raw";
 
 import { MeshBase } from "./MeshBase";
 import { Spheres } from "./Spheres";
+import { SongCard } from "./SongCard";
 
 
 
@@ -13,7 +14,7 @@ export class Tunnel extends MeshBase {
 	_center: Vector3;
 	_nRings: number;
 	_radius: number;
-    _rings: Spheres[];
+    _rings: MeshBase[];
     _clock: Clock;
     _uniforms;
     _material;
@@ -74,12 +75,23 @@ export class Tunnel extends MeshBase {
                 fragmentShader: sphereFragment,
             });
             const material = sphereMaterial;
-
-            const ring = new Spheres(false, pos, material);
-            this._rings.push(ring);
+            if (i == 2) {
+                const p = this.getCheckpointAt(i - 0.5);
+                const card = new SongCard(p, new Vector3(0, this.getRotation(i - 0.5), 0));
+                this._rings.push(card);
+            } else {
+                const ring = new Spheres(false, pos, material);
+                this._rings.push(ring);
+            }
+            
         }
 
 	}
+
+
+    getRotation(i: number): number {
+        return  Math.PI - (1 * Math.PI * (i / this._nRings) + this._globalRotation);
+    }
 
     getCenter(): Vector3 {
         return new Vector3().copy(this._center);  

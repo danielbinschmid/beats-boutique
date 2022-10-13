@@ -29,9 +29,7 @@ export function initScene(renderer: SceneRenderer) {
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
     renderer._scene.add(directionalLight);
 
-    // orbit control
-    // const orbitcontrols = new OrbitControls(renderer._camera, renderer._canvas);
-    // orbitcontrols.position0 = renderer._camera.position;
+    
 
 
     // ----------- STATIC FIXED POSITIONS ------------
@@ -57,6 +55,8 @@ export function initScene(renderer: SceneRenderer) {
 
     const dragon = new DragonGltf(dragonCenter, undefined, rotateDragon);
     renderer._addMesh(dragon);
+
+
 
 
     // --------------NON-STATIC POSITIONS --------------
