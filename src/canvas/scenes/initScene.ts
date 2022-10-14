@@ -224,6 +224,7 @@ export function initScene(renderer: SceneRenderer) {
         window.animationRenderer.renderVars(triggerVars);
         vm._animationLines.push(line3);
     }
+
     
     
 }

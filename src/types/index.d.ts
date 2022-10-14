@@ -35,3 +35,9 @@ declare type CamFovAnimationOptions = {
     animationLine?: AnimationLine;
     ease?: gsap.EaseFunction
 }
+
+declare type SongMetaData = {
+    url: string,
+    songName: string,
+    artistName: string
+}

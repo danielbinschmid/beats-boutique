@@ -31,6 +31,10 @@ import { CamFovAnimationOptions, MeshMovementOptions } from "@/types";
 import { camFovAnimation } from "../animations/CamFovAnimation";
 import { initScene } from "./initScene";
 
+function initMaterial() {
+    
+}
+
 
 export class SceneRenderer {
     _meshes: MeshBase[];
@@ -53,8 +57,9 @@ export class SceneRenderer {
         };
     };
     scrollTriggerObjs: {}
+    _args: {}
 
-
+  
 
     _addMesh(mesh: MeshBase) {
         this._meshes.push(mesh);
@@ -68,6 +73,7 @@ export class SceneRenderer {
     }
 
     _initRenderer() {
+        
         this._scene = new THREE.Scene();
         this._camera = new THREE.PerspectiveCamera(
             50,
@@ -129,6 +135,7 @@ export class SceneRenderer {
 
     constructor() {
         // initialize
+        this._args = {};
         this._initRenderer();
         this._initScene();
         const vm = this;
@@ -146,7 +153,7 @@ export class SceneRenderer {
         for (const mesh of vm._meshes) {
             mesh.updateFrame();
         }
-
+        
         // for (const v of window.animationRenderer._allVars) {
         //     console.log(v.id);
         // }

@@ -6,7 +6,7 @@ import sphereFragment from "@/shader/tunnel/sphereFragment.glsl?raw";
 
 import { MeshBase } from "./MeshBase";
 import { Spheres } from "./Spheres";
-import { SongCard } from "./SongCard";
+import { ArtistCard } from "./ArtistCard";
 
 
 
@@ -21,7 +21,7 @@ export class Tunnel extends MeshBase {
     _globalRotation;
     checkpoints: Vector3[];
 
-    constructor(center: Vector3, radius: number, rotation: number = 0) {
+    constructor( center: Vector3, radius: number, rotation: number = 0) {
         super();
         this._globalRotation = rotation;
         // Sphere rings rotated and positioned accordingly
@@ -78,7 +78,7 @@ export class Tunnel extends MeshBase {
             if (i == 2 || i == 4 || i == 6 || i == 8) {
                 const p = this.getCheckpointAt(i - 0.5);
 
-                const card = new SongCard({
+                const card = new ArtistCard({
                     position: p,
                     rotation: undefined,
                     scaling: undefined,
