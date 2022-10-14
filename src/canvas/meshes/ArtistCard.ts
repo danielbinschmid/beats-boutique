@@ -1,10 +1,18 @@
-import { BufferGeometry, Camera, ColorRepresentation, Mesh, PerspectiveCamera, PlaneGeometry, Scene, Vector3 } from "three";
+import { BufferGeometry, Camera, Clock, Color, ColorRepresentation, Line, Mesh, PerspectiveCamera, PlaneGeometry, Scene, SphereGeometry, Vector3 } from "three";
 import * as THREE from "three"
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry, TextGeometryParameters } from 'three/examples/jsm/geometries/TextGeometry.js';
 import { MeshBase } from "./MeshBase";
 import { SongMetaData } from "@/types";
 import {  RotatingText } from "./RotatingText";
+import { PlayButton } from "./PlayButton"; 
+
+import sphereVertex from "@/shader/sphere/singleSphereVertex.glsl?raw";
+import sphereFragment from "@/shader/sphere/singleSphereFragment.glsl?raw";
+
+
+
+
 
 function getFarNearPlane(cam: PerspectiveCamera) {
 
@@ -66,6 +74,8 @@ export class ArtistCard extends MeshBase {
     _artist: ArtistCardMetadata;
     _title: string;
     _animatedMeshes: MeshBase[];
+    _clock: Clock;
+    _uniforms;
 
     constructor( pos: ArtistCardWorldPos, artist?: ArtistCardMetadata, title?: string) {
         super();
@@ -79,7 +89,7 @@ export class ArtistCard extends MeshBase {
                 artistName: "prodbycctv"
             }]
         }
-
+        this._clock = new Clock(true);
         this._globalPosition = pos.position;
         this._globalRotation = pos.rotation;
         this._lookAt = pos.lookAt;
@@ -98,6 +108,7 @@ export class ArtistCard extends MeshBase {
         });
         
         const mesh = new Mesh(geometry, material)
+        this._uniforms = {};
         this._cardMesh = mesh;
         this._cardMesh.position.setX(this._globalPosition.x);
         this._cardMesh.position.setY(this._globalPosition.y);
@@ -165,6 +176,66 @@ export class ArtistCard extends MeshBase {
 
             const rotatingText = new RotatingText(font, processTextInputKawasaki(this._artist.songs[0].songName), this._cardMesh);
             this._animatedMeshes.push(rotatingText);
+
+            const playBtnWidth = 0.2;
+            const playBtnHeight = 0.1;
+            const playBtnPos = new Vector3( 
+                - boundary / 2, 
+                - boundary + marginVertical + 3 * playBtnHeight / 2, 
+                0);
+            const playBtn = new PlayButton(this._cardMesh, playBtnPos);
+
+
+            const material = new THREE.LineBasicMaterial({
+                color: new Color('rgb(150,150,255)'),
+                linewidth: 100,
+            });
+            
+            const points = [];
+            points.push( new THREE.Vector3( - 0.4, -0.47, 0 ) );
+            points.push( new THREE.Vector3( 0.4, -0.47, 0 ) );
+            const geometry = new THREE.BufferGeometry().setFromPoints( points );
+            
+            const line = new THREE.Line( geometry, material );
+            this._cardMesh.children.push(line);
+            line.parent = this._cardMesh;
+
+            const sph = this._sphere();
+            sph.position.copy(new Vector3(-0.4, -.47, 0));
+            this._cardMesh.children.push(sph);
+            sph.parent = this._cardMesh;
+
+            const h3LineHeight = 0.04;
+            const h3: TextGeometryParameters = {
+                font: params.font,
+                height: params.height,
+                size: params.size / 2.5,
+                bevelEnabled: params.bevelEnabled
+            }
+            const nextMesh = new Mesh(new TextGeometry(processTextInputKawasaki("next"), h3), new THREE.MeshNormalMaterial());
+            nextMesh.position.y -= boundary / 2 - h3LineHeight / 2 ;
+            nextMesh.position.x += marginHorizontal;
+            nextMesh.scale.y = yScale;
+            nextMesh.scale.x = xScale
+            nextMesh.parent = this._cardMesh;
+            this._cardMesh.children.push(nextMesh);
+
+
+            const prevMesh = new Mesh(new TextGeometry(processTextInputKawasaki("previous"), h3), new THREE.MeshNormalMaterial());
+            prevMesh.position.y -= boundary / 2  + marginVertical + h3LineHeight / 2;
+            prevMesh.position.x +=  marginHorizontal;
+            prevMesh.scale.y = yScale;
+            prevMesh.scale.x = xScale
+            prevMesh.parent = this._cardMesh;
+            this._cardMesh.children.push(prevMesh);
+
+            const settingsMesh = new Mesh(new TextGeometry(processTextInputKawasaki("settings"), h3), new THREE.MeshNormalMaterial());
+            settingsMesh.position.y  -= boundary / 2  + 2 *  marginVertical + 3* h3LineHeight / 2;
+            settingsMesh.position.x  +=  marginHorizontal;
+            settingsMesh.scale.y = yScale;
+            settingsMesh.scale.x = xScale
+            settingsMesh.parent = this._cardMesh;
+            this._cardMesh.children.push(settingsMesh);
         });
     }
 
@@ -172,10 +243,32 @@ export class ArtistCard extends MeshBase {
         //
     }
 
+    _sphere() {
+        
+        this._uniforms = {
+            'u_time': {
+                type: "f",
+                value: this._clock.elapsedTime,
+            }
+        };
+        const sphereMaterial = new THREE.ShaderMaterial({
+            wireframe: false,
+            uniforms: this._uniforms,
+            vertexShader: sphereVertex,
+            fragmentShader: sphereFragment,
+        });
+    
+        const geometry = new SphereGeometry(0.03, 3, 2);
+        return new Mesh(geometry, sphereMaterial);
+    }
+
     updateFrame() {
         for (const mesh of this._animatedMeshes) {
             mesh.updateFrame();
         }
+        if (this._uniforms["u_time"]) 
+            this._uniforms.u_time.value = this._clock.getElapsedTime();
+
     }
     addToScene(scene: Scene) {
         scene.add(this._cardMesh);

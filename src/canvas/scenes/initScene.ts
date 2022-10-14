@@ -24,10 +24,10 @@ export function initScene(renderer: SceneRenderer) {
     renderer._renderer.setClearColor(backgroundColor);
 
     // add light
-    const light = new THREE.AmbientLight(new THREE.Color(100, 0, 0), 0.01); // soft white light
+    const light = new THREE.AmbientLight(new THREE.Color(1, 1, 1), 1); // soft white light
     renderer._scene.add(light);
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    renderer._scene.add(directionalLight);
+    const directionalLight = new THREE.DirectionalLight(new THREE.Color(0, 0, 0), 1);
+    //renderer._scene.add(directionalLight);
 
     
 

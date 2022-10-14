@@ -86,8 +86,8 @@ export class Tunnel extends MeshBase {
                 });
                 this._rings.push(card);
             }
-            const ring = new Spheres(false, pos, material);
-            this._rings.push(ring);
+            //const ring = new Spheres(false, pos, material);
+            //this._rings.push(ring);
 
         }
 
