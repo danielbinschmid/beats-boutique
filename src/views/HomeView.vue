@@ -7,6 +7,8 @@ import { ScrollTrigger } from "gsap/all";
 import { AnimationRenderer } from "@/canvas/animations/AnimationRenderer";
 import Sidebar from "@/components/Sidebar.vue";
 import NavigationWrapper from "@/components/NavigationWrapper.vue";
+import PlayerBar from "@/components/PlayerBar.vue"
+
 onMounted(() => {
     const animationRenderer = new AnimationRenderer();
     window.animationRenderer = animationRenderer;
@@ -28,6 +30,10 @@ onMounted(() => {
         <navigation-wrapper>
             <template v-slot:sidebar>
                 <sidebar />
+            </template>
+
+            <template v-slot:player>
+                <player-bar />
             </template>
 
             <template v-slot:content>

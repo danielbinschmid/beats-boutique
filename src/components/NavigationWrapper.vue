@@ -60,8 +60,12 @@ window.addEventListener('resize', () => {
     <div class="navigation-wrapper">
         <div id="st-container" class="st-container">
 
-            <nav class="st-menu st-effect-1" id="menu-1" :style="{width: isMobile.val ? '70vw':'30vw'}">
+            <nav class="st-menu-1 st-effect-1" id="menu-1" :style="{width: isMobile.val ? '70vw':'30vw'}">
                 <slot name="sidebar"></slot>
+            </nav>
+            <nav class="st-menu-2 st-effect-2" id="menu-2" :style="{width: isMobile.val ? '70vw':'30vw'}">
+                hello
+                <slot name="player"></slot>
             </nav>
 
             <div class="st-pusher">
@@ -69,7 +73,13 @@ window.addEventListener('resize', () => {
 
                 <div id="st-trigger-effects" class="menu-btn">
                     <button data-effect="st-effect-1" class="btn" type="button">
-                        Menu
+                        <img src="menu.svg" class="svg">
+                    </button>
+                </div>
+
+                <div id="st-trigger-effects" class="player-btn">
+                    <button data-effect="st-effect-2" class="btn" type="button">
+                        <img src="player.svg" class="svg">
                     </button>
                 </div>
                 <hr />
@@ -81,7 +91,13 @@ window.addEventListener('resize', () => {
 
 <style scoped>
 
+.svg {
+
+    pointer-events: none;
+}
 .btn {
+    width: 8vh;
+    height: 8vh;
     border: none;
     color:rgba(173, 216, 230, 0.5);
     background-color: rgba(0, 0, 0, 0);
@@ -107,6 +123,13 @@ window.addEventListener('resize', () => {
     position: fixed;
     top: 0;
     right: 0;
+    mix-blend-mode: difference;
+    background-color: rgba(100, 100, 100, 0);
+}
+.player-btn {
+    position: fixed;
+    top: 0;
+    left: 0;
     mix-blend-mode: difference;
     background-color: rgba(100, 100, 100, 0);
 }
@@ -143,7 +166,7 @@ window.addEventListener('resize', () => {
     transition: opacity 0.5s;
 }
 
-.st-menu {
+.st-menu-1 {
     position: fixed;
     top: 0;
     right: 0;
@@ -155,10 +178,22 @@ window.addEventListener('resize', () => {
     transition: all 0.5s;
 }
 
-.st-menu::after {
+.st-menu-2 {
     position: fixed;
     top: 0;
-    right: 0;
+    left: 0;
+    z-index: 100;
+    visibility: hidden;
+    width: 200px;
+    height: 100%;
+    -webkit-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.st-menu-2::after {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.2);
@@ -168,7 +203,15 @@ window.addEventListener('resize', () => {
     transition: opacity 0.5s;
 }
 
-.st-menu-open .st-menu::after {
+.st-menu-open .st-menu-1::after {
+    width: 0;
+    height: 0;
+    opacity: 0;
+    -webkit-transition: opacity 0.5s, width 0.1s 0.5s, height 0.1s 0.5s;
+    transition: opacity 0.5s, width 0.1s 0.5s, height 0.1s 0.5s;
+}
+
+.st-menu-open .st-menu-2::after {
     width: 0;
     height: 0;
     opacity: 0;
@@ -178,19 +221,37 @@ window.addEventListener('resize', () => {
 
 
 /* Effect 1: Slide in on top */
-.st-effect-1.st-menu {
+.st-effect-1.st-menu-1 {
     visibility: visible;
     -webkit-transform: translate3d(105%, 0, 0);
     transform: translate3d(105%, 0, 0);
 }
 
-.st-effect-1.st-menu-open .st-effect-1.st-menu {
+.st-effect-1.st-menu-open .st-effect-1.st-menu-1 {
     visibility: visible;
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
 }
 
-.st-effect-1.st-menu::after {
+.st-effect-1.st-menu-1::after {
+    display: none;
+}
+
+
+/* Effect 2: Slide from the left */
+.st-effect-2.st-menu-2 {
+    visibility: visible;
+    -webkit-transform: translate3d(-100%, 0, 0);
+    transform: translate3d(-100%, 0, 0);
+}
+
+.st-effect-2.st-menu-open .st-effect-2.st-menu-2 {
+    visibility: visible;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+
+.st-effect-2.st-menu-2::after {
     display: none;
 }
 
