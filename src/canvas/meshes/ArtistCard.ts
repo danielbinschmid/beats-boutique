@@ -65,7 +65,8 @@ export function processTextInputKawasaki(inp: string) {
 
 declare type RaycastObjectUserData = {
     triggerCallbackIdx?: string,
-    name?: string
+    name?: string,
+    mesh?: Mesh
 }
 
 
@@ -86,7 +87,8 @@ export class ArtistCard extends MeshBase {
     _raycastData: {
         objects: Object3D[],
         onEntry: {[idx: string]: any},
-        onLeave: {[idx: string]: any}
+        onLeave: {[idx: string]: any},
+        onClick: {[idx: string]: any}
     }
     _pointedObjects: {
         [id: string]: RaycastObjectUserData
@@ -99,7 +101,8 @@ export class ArtistCard extends MeshBase {
         this._raycastData = {
             objects: [],
             onEntry: {},
-            onLeave: {}
+            onLeave: {},
+            onClick: {}
         }
         this._pointedObjects = {};
         this._mousePointer = new Vector2();
@@ -126,10 +129,38 @@ export class ArtistCard extends MeshBase {
     _initRaycaster() {
         this._raycaster = new THREE.Raycaster();
         this._mousePointer = new THREE.Vector2();
-        window.addEventListener('pointermove', (event) => {
-            this._mousePointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-            this._mousePointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
+        const vm = this;
+        window.addEventListener('mousemove', (event) => {
+            pointerPosChange(event);
         });
+
+        function pointerPosChange(event) {
+            vm._mousePointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+            vm._mousePointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
+            vm._raycasterUpdate();
+        }
+
+        function onClick() {
+            for (const key in vm._pointedObjects) {
+                const hovered = vm._pointedObjects[key];
+                vm._raycastData.onClick[hovered.triggerCallbackIdx]();   
+            }
+        }
+
+
+
+        window.addEventListener('touchstart', (ev) => {
+            pointerPosChange(ev);
+            setTimeout(() => {
+                pointerPosChange({clientX: -10000000, clientY: -10000000});
+            }, 1000)
+           
+        });
+
+        window.addEventListener('mousedown', (ev) => {
+            onClick();
+        })
+
 
     }
 
@@ -190,6 +221,33 @@ export class ArtistCard extends MeshBase {
 
 
         loader.load('fonts/kawasaki.json', (font) => {
+            const vm = this;
+            function addTriggerbox(width, height, position, id: string, mesh: Mesh, name?: string) {
+                const triggerBoxMesh = new Mesh(new PlaneGeometry(width, height, 2, 2), invisibleMaterial);
+                triggerBoxMesh.position.copy(position);
+                triggerBoxMesh.applyMatrix4(vm._cardMesh.matrixWorld);
+                const usrData: RaycastObjectUserData = {
+                    triggerCallbackIdx: id,
+                    name: name,
+                    mesh: mesh
+                }
+                triggerBoxMesh.userData = usrData
+                vm._raycastData.objects.push(triggerBoxMesh)
+                const upScaling = 0.8;
+                vm._raycastData.onEntry[usrData.triggerCallbackIdx] = () => {
+                    mesh.scale.x *= upScaling;
+                    mesh.scale.y *= upScaling;
+                }
+                vm._raycastData.onLeave[usrData.triggerCallbackIdx] = () => {
+                    mesh.scale.x *= 1 / upScaling;
+                    mesh.scale.y *= 1 / upScaling;
+                }
+                vm._raycastData.onClick[usrData.triggerCallbackIdx] = () => {
+                    console.log("clicked" + usrData.triggerCallbackIdx);
+                }
+                vm._cardMesh.children.push(triggerBoxMesh)
+            }
+
             // constants
             const marginHorizontal = 0.05
             const marginVertical = 0.05
@@ -243,27 +301,11 @@ export class ArtistCard extends MeshBase {
                 - boundary + marginVertical + 3 * playBtnHeight / 2,
                 0);
             const playBtn = new PlayButton(this._cardMesh, playBtnPos);
+            addTriggerbox(playBtnWidth, playBtnHeight, playBtn._mesh.position, "0", playBtn._mesh, "Play and pause button");
 
-
-            const playBtnTriggerBox = new PlaneGeometry(playBtnWidth, playBtnHeight, 2, 2);
-            const playBtnTriggerMesh = new Mesh(playBtnTriggerBox, invisibleMaterial);
-            console.log(playBtn._mesh.position)
-            playBtnTriggerMesh.position.copy(playBtn._mesh.position);
-            playBtnTriggerMesh.applyMatrix4(this._cardMesh.matrixWorld);
-            const playBtnUserData: RaycastObjectUserData = {
-                triggerCallbackIdx: "0",
-                name: "Play or pause button"
-            }
-            playBtnTriggerMesh.userData = playBtnUserData
-            this._raycastData.objects.push(playBtnTriggerMesh)
-            this._raycastData.onEntry[playBtnUserData.triggerCallbackIdx] = () => {
-                console.log("on entry");
-            }
-            this._raycastData.onLeave[playBtnUserData.triggerCallbackIdx] = () => {
-                console.log("on leave");
-            }
-            this._cardMesh.children.push(playBtnTriggerMesh)
-
+            
+            
+            
             const material = new THREE.LineBasicMaterial({
                 color: new Color('rgb(150,150,255)'),
                 linewidth: 100,
@@ -297,6 +339,8 @@ export class ArtistCard extends MeshBase {
             nextMesh.scale.x = xScale
             nextMesh.parent = this._cardMesh;
             this._cardMesh.children.push(nextMesh);
+            // addTriggerbox(0.2, 0.2, nextMesh.position, "next", nextMesh, "Next song button");
+
 
 
             const prevMesh = new Mesh(new TextGeometry(processTextInputKawasaki("previous"), h3), new THREE.MeshNormalMaterial());
@@ -344,7 +388,6 @@ export class ArtistCard extends MeshBase {
         if (this._uniforms["u_time"])
             this._uniforms.u_time.value = this._clock.getElapsedTime();
 
-        this._raycasterUpdate();
 
     }
     addToScene(scene: Scene) {
