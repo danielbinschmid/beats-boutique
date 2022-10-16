@@ -77,7 +77,7 @@ onMounted(() => {
     <div class="greetings">
         <div ref="contentContainer">
             <section id="section_Home" ref="refSection"> </section>
-            <title-section />
+            <title-section id="section_Heading"/>
             <menu-section id="section_Menu" />
 
 

@@ -29,7 +29,6 @@ export function initScene(renderer: SceneRenderer) {
     const directionalLight = new THREE.DirectionalLight(new THREE.Color(0, 0, 0), 1);
     //renderer._scene.add(directionalLight);
 
-    
 
 
     // ----------- STATIC FIXED POSITIONS ------------

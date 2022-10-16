@@ -1,7 +1,7 @@
 import { AnimationLine } from "@/canvas/animations/AnimationLine";
 import { AnimationRenderer } from "@/canvas/animations/AnimationRenderer";
 import { SceneRenderer } from "@/canvas/scenes/SceneRenderer";
-import { Vector3 } from "three";
+import { Camera, PerspectiveCamera, Vector3 } from "three";
 
 declare global {
     interface Window {
@@ -9,6 +9,7 @@ declare global {
         isMobile: boolean;
         nSections: number;
         isScrolling: boolean;
+        camera: PerspectiveCamera
     }
 }
 

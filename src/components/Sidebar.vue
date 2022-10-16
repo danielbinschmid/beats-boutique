@@ -17,7 +17,9 @@ const menuAfterContent = [
 
 const menuBeforeContent = [
     "Home",
-    "Menu"
+    "Heading",
+    "Menu",
+    
 ]
 
 function scrollToSection(target: string) {

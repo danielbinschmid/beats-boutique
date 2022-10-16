@@ -6,6 +6,7 @@ export class PlayButton extends MeshBase {
     _position: Vector3;
     _parent: Mesh;
     _scaling: number;
+    _mesh: Mesh;
     constructor(parent: Mesh, position?: Vector3) {
         super();
         this._position = position? position: new Vector3(0, 0, 0);
@@ -21,6 +22,7 @@ export class PlayButton extends MeshBase {
         const material = new MeshBasicMaterial(materialParameters);
 
         const playBtn = new Mesh(g, material);
+        this._mesh = playBtn;
         this._parent.children.push(playBtn);
 
         playBtn.position.add(this._position);
