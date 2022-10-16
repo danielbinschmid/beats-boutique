@@ -9,7 +9,9 @@ declare global {
         isMobile: boolean;
         nSections: number;
         isScrolling: boolean;
-        camera: PerspectiveCamera
+        camera: PerspectiveCamera;
+        mainCanvas: HTMLCanvasElement;
+        mainAudio: HTMLAudioElement;
     }
 }
 

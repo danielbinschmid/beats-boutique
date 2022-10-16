@@ -1,5 +1,14 @@
 <script setup lang="ts">
 import VueSection from "@/components/ui_comps/VueSection.vue"
+import { reactive } from "vue";
+import * as ui from "./uiSizeCalculation";
+
+
+const sizes = reactive({val: ui.computeSizes(window.innerHeight)} );
+
+window.onresize = () => {
+    sizes.val = ui.computeSizes(window.innerHeight);
+}
 </script>
 
 <template>
@@ -7,9 +16,9 @@ import VueSection from "@/components/ui_comps/VueSection.vue"
         <vue-section>
             <div class="container">
 
-                <h2> BEATS BOUTIQUE </h2>
-                <h2> SCOPE OUT </h2>
-                <h2> VIBES & HEADBANGERS </h2>
+                <h2 :style="{fontSize: sizes.val.h2}"> BEATS BOUTIQUE </h2>
+                <h2 :style="{fontSize: sizes.val.h2}"> SCOPE OUT </h2>
+                <h2 :style="{fontSize: sizes.val.h2}"> VIBES & HEADBANGERS </h2>
             </div>
 
         </vue-section>
@@ -33,6 +42,4 @@ h2 {
     font-weight: bold;
     text-align: center;
 }
-
-
 </style>

@@ -13,6 +13,7 @@ export function computeSizes(sectionHeight: number, nRows?: number) {
     return {
         h2: Math.floor(singleRowHeight / 2) + 'px',
         p: Math.floor(singleRowHeight / 3.5) + 'px',
-        lineHeight: Math.floor(100 / nRows) + "%"
+        lineHeight: Math.floor(100 / nRows) + "%",
+        sidebar: Math.floor(singleRowHeight / 3.5) + 'px'
     }
 }

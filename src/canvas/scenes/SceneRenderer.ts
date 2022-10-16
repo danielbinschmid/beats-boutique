@@ -82,8 +82,9 @@ export class SceneRenderer {
             1000
         );
         window.camera = this._camera;
-        const canvas: HTMLElement = document.getElementById("canvas");
+        const canvas: HTMLCanvasElement = <HTMLCanvasElement> document.getElementById("canvas");
         this._canvas = canvas;
+        window.mainCanvas = canvas;
         const webglParams: WebGLRendererParameters = {
             canvas: canvas,
             antialias: true

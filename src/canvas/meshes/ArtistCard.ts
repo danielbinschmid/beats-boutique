@@ -1,4 +1,4 @@
-import { BufferGeometry, Camera, Clock, Color, ColorRepresentation, Line, Mesh, Object3D, PerspectiveCamera, PlaneGeometry, Raycaster, Scene, SphereGeometry, Vector2, Vector3 } from "three";
+import { BufferGeometry, Camera, Clock, Color, ColorRepresentation, Line, Mesh, Object3D, PerspectiveCamera, PlaneGeometry, Raycaster, Scene, SphereGeometry, Vector2, Vector3, VectorKeyframeTrack } from "three";
 import * as THREE from "three"
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry, TextGeometryParameters } from 'three/examples/jsm/geometries/TextGeometry.js';
@@ -82,13 +82,13 @@ export class ArtistCard extends MeshBase {
     _animatedMeshes: MeshBase[];
     _clock: Clock;
     _uniforms;
-    
+
     _raycaster: Raycaster;
     _raycastData: {
         objects: Object3D[],
-        onEntry: {[idx: string]: any},
-        onLeave: {[idx: string]: any},
-        onClick: {[idx: string]: any}
+        onEntry: { [idx: string]: any },
+        onLeave: { [idx: string]: any },
+        onClick: { [idx: string]: any }
     }
     _pointedObjects: {
         [id: string]: RaycastObjectUserData
@@ -135,15 +135,17 @@ export class ArtistCard extends MeshBase {
         });
 
         function pointerPosChange(event) {
-            vm._mousePointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-            vm._mousePointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
+            const canvasRect = window.mainCanvas.getBoundingClientRect();
+
+            vm._mousePointer.x = ((event.clientX - canvasRect.left) / (canvasRect.right - canvasRect.left)) * 2 - 1;
+            vm._mousePointer.y = - ((event.clientY - canvasRect.top) / (canvasRect.bottom - canvasRect.top)) * 2 + 1;
             vm._raycasterUpdate();
         }
 
         function onClick() {
             for (const key in vm._pointedObjects) {
                 const hovered = vm._pointedObjects[key];
-                vm._raycastData.onClick[hovered.triggerCallbackIdx]();   
+                vm._raycastData.onClick[hovered.triggerCallbackIdx]();
             }
         }
 
@@ -152,9 +154,9 @@ export class ArtistCard extends MeshBase {
         window.addEventListener('touchstart', (ev) => {
             pointerPosChange(ev);
             setTimeout(() => {
-                pointerPosChange({clientX: -10000000, clientY: -10000000});
-            }, 1000)
-           
+                pointerPosChange({ clientX: -10000000, clientY: -10000000 });
+            }, 200)
+
         });
 
         window.addEventListener('mousedown', (ev) => {
@@ -167,7 +169,7 @@ export class ArtistCard extends MeshBase {
     _raycasterUpdate() {
         this._raycaster.setFromCamera(this._mousePointer, window.camera);
         const intersects = this._raycaster.intersectObjects(this._raycastData.objects);
-       
+
         // First check, if any object is released
         for (const key in this._pointedObjects) {
             if (intersects.findIndex((val, idx, arr) => {
@@ -195,7 +197,7 @@ export class ArtistCard extends MeshBase {
             wireframe: true,
             color: "rgba(0, 0, 0)",
             transparent: true,
-            opacity: 0.2
+            opacity: 0
         });
 
         const mesh = new Mesh(geometry, invisibleMaterial)
@@ -222,8 +224,9 @@ export class ArtistCard extends MeshBase {
 
         loader.load('fonts/kawasaki.json', (font) => {
             const vm = this;
-            function addTriggerbox(width, height, position, id: string, mesh: Mesh, name?: string) {
-                const triggerBoxMesh = new Mesh(new PlaneGeometry(width, height, 2, 2), invisibleMaterial);
+            function addTriggerbox(width, height, position, id: string, mesh: Mesh,clickCallback: any, name?: string, scaling?: number) {
+                scaling = scaling? scaling: 0.8;
+                const triggerBoxMesh = new Mesh(new PlaneGeometry(width, height, 1, 1), invisibleMaterial);
                 triggerBoxMesh.position.copy(position);
                 triggerBoxMesh.applyMatrix4(vm._cardMesh.matrixWorld);
                 const usrData: RaycastObjectUserData = {
@@ -233,18 +236,18 @@ export class ArtistCard extends MeshBase {
                 }
                 triggerBoxMesh.userData = usrData
                 vm._raycastData.objects.push(triggerBoxMesh)
-                const upScaling = 0.8;
+                const upScaling = scaling;
                 vm._raycastData.onEntry[usrData.triggerCallbackIdx] = () => {
+                    document.body.style.cursor = "pointer";
                     mesh.scale.x *= upScaling;
                     mesh.scale.y *= upScaling;
                 }
                 vm._raycastData.onLeave[usrData.triggerCallbackIdx] = () => {
+                    document.body.style.cursor = "";
                     mesh.scale.x *= 1 / upScaling;
                     mesh.scale.y *= 1 / upScaling;
                 }
-                vm._raycastData.onClick[usrData.triggerCallbackIdx] = () => {
-                    console.log("clicked" + usrData.triggerCallbackIdx);
-                }
+                vm._raycastData.onClick[usrData.triggerCallbackIdx] = clickCallback;
                 vm._cardMesh.children.push(triggerBoxMesh)
             }
 
@@ -280,14 +283,19 @@ export class ArtistCard extends MeshBase {
                 size: params.size / 1.5,
                 bevelEnabled: params.bevelEnabled
             }
+            const h2LineWidth = 1;
+            const h2LineHeight = 0.08;
             const artistNameMesh = new Mesh(new TextGeometry(processTextInputKawasaki("artist: " + this._artist.artistName), h2), new THREE.MeshNormalMaterial());
             artistNameMesh.position.y += boundary - 2 * marginVertical - lineHeight * 2;
             artistNameMesh.position.x -= boundary - marginHorizontal;
             artistNameMesh.scale.y = yScale;
             artistNameMesh.scale.x = xScale
             artistNameMesh.parent = this._cardMesh;
-           
+
             this._cardMesh.children.push(artistNameMesh);
+            addTriggerbox(h2LineWidth, h2LineHeight, new Vector3(0, artistNameMesh.position.y + h2LineHeight / 2,0), "artist_name", artistNameMesh, () => {
+                console.log("click artist name")
+            }, "Settings button", 1.1);
 
 
 
@@ -301,14 +309,16 @@ export class ArtistCard extends MeshBase {
                 - boundary + marginVertical + 3 * playBtnHeight / 2,
                 0);
             const playBtn = new PlayButton(this._cardMesh, playBtnPos);
-            addTriggerbox(playBtnWidth, playBtnHeight, playBtn._mesh.position, "0", playBtn._mesh, "Play and pause button");
+            addTriggerbox(playBtnWidth, playBtnHeight, playBtn._mesh.position, "0", playBtn._mesh, () => {
+                console.log("play or pause");
+            } ,"Play and pause button");
 
-            
-            
-            
+
+
+
             const material = new THREE.LineBasicMaterial({
                 color: new Color('rgb(150,150,255)'),
-                linewidth: 100,
+                linewidth: 5,
             });
 
             const points = [];
@@ -319,13 +329,20 @@ export class ArtistCard extends MeshBase {
             const line = new THREE.Line(geometry, material);
             this._cardMesh.children.push(line);
             line.parent = this._cardMesh;
+            const sliderLineHeight = 0.1;
+            
 
             const sph = this._sphere();
             sph.position.copy(new Vector3(-0.4, -.47, 0));
             this._cardMesh.children.push(sph);
             sph.parent = this._cardMesh;
 
+            addTriggerbox(0.8, sliderLineHeight, new Vector3(0, -0.47, 0), "slider", sph, () => {
+                console.log("slider");
+            }, "Time slider", 2);
+
             const h3LineHeight = 0.04;
+            const h3LineWidth = 0.25;
             const h3: TextGeometryParameters = {
                 font: params.font,
                 height: params.height,
@@ -339,7 +356,9 @@ export class ArtistCard extends MeshBase {
             nextMesh.scale.x = xScale
             nextMesh.parent = this._cardMesh;
             this._cardMesh.children.push(nextMesh);
-            // addTriggerbox(0.2, 0.2, nextMesh.position, "next", nextMesh, "Next song button");
+            addTriggerbox(h3LineWidth, h3LineHeight, new Vector3().copy(nextMesh.position).add(new Vector3(h3LineWidth / 2, h3LineHeight / 2, 0)), "next", nextMesh, () => {
+                console.log("clicked next song");
+            }, "Next song button");
 
 
 
@@ -347,9 +366,13 @@ export class ArtistCard extends MeshBase {
             prevMesh.position.y -= boundary / 2 + marginVertical + h3LineHeight / 2;
             prevMesh.position.x += marginHorizontal;
             prevMesh.scale.y = yScale;
-            prevMesh.scale.x = xScale
+            prevMesh.scale.x = xScale;
             prevMesh.parent = this._cardMesh;
             this._cardMesh.children.push(prevMesh);
+            addTriggerbox(h3LineWidth, h3LineHeight, new Vector3().copy(prevMesh.position).add(new Vector3(h3LineWidth / 2, h3LineHeight / 2, 0)), "prev", prevMesh, () => {
+                console.log("Clicked previous song");
+            }, "Previous song button");
+
 
             const settingsMesh = new Mesh(new TextGeometry(processTextInputKawasaki("settings"), h3), new THREE.MeshNormalMaterial());
             settingsMesh.position.y -= boundary / 2 + 2 * marginVertical + 3 * h3LineHeight / 2;
@@ -358,6 +381,10 @@ export class ArtistCard extends MeshBase {
             settingsMesh.scale.x = xScale
             settingsMesh.parent = this._cardMesh;
             this._cardMesh.children.push(settingsMesh);
+            addTriggerbox(h3LineWidth, h3LineHeight, new Vector3().copy(settingsMesh.position).add(new Vector3(h3LineWidth / 2, h3LineHeight / 2, 0)), "3", settingsMesh, () => {
+                console.log("open settings button")
+            }, "Settings button");
+
         });
     }
 
@@ -377,7 +404,7 @@ export class ArtistCard extends MeshBase {
             fragmentShader: sphereFragment,
         });
 
-        const geometry = new SphereGeometry(0.03, 3, 2);
+        const geometry = new SphereGeometry(0.03, 4, 2);
         return new Mesh(geometry, sphereMaterial);
     }
 

@@ -1,6 +1,15 @@
 <script setup lang="ts">
 import VueSection from "@/components/ui_comps/VueSection.vue"
 import { gsap, Linear } from "gsap";
+import { reactive } from "vue";
+import * as ui from "./uiSizeCalculation";
+
+
+const sizes = reactive({val: ui.computeSizes(window.innerHeight)} );
+
+window.onresize = () => {
+    sizes.val = ui.computeSizes(window.innerHeight);
+}
 
 const nWebglContentSections = 4;
 const sectionNames = ["BEATS", "SAMPLES", "ARTISTS", "RELEASES"]
@@ -19,7 +28,7 @@ function scrollTo(target: number) {
         <vue-section>
             <div class="container">
                 <div v-for="(item, i) in sectionNames" :key="i">
-                    <h2 :content="item" @click="scrollTo(i + 1)"> {{ item }} </h2>
+                    <h2 :style="{fontSize: sizes.val.h2}" :content="item" @click="scrollTo(i + 1)"> {{ item }} </h2>
                 </div>
             </div>
 
