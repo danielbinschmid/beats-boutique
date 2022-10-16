@@ -3,18 +3,7 @@ import { onMounted, reactive } from 'vue';
 import * as ui from "./uiSizeCalculation";
 
 
-//For Demo only
-var links = document.getElementsByClassName('link')
-for (var i = 0; i <= links.length; i++)
-    addClass(i)
 
-
-function addClass(id) {
-    setTimeout(function () {
-        if (id > 0) links[id - 1].classList.remove('hover')
-        links[id].classList.add('hover')
-    }, id * 750)
-}
 
 const isMobile = reactive({ val: ui.isMobile() });
 
@@ -26,47 +15,60 @@ window.addEventListener('resize', () => {
 <template>
     <div class="player-bar">
 
-        <div class="container" >
-            <div class="link">
-                <div class="text">Home</div>
+        <div class="container">
+            <div>
+                <div class="song-info">
+                    <img src="https://chillhop.com/wp-content/uploads/2020/09/0255e8b8c74c90d4a27c594b3452b2daafae608d-1024x1024.jpg"
+                        alt="" />
+
+                    <div>
+                        <h2>Quran</h2>
+                        <h3>Hakim Omari</h3>
+                    </div>
+                </div>
+                <div class="player">
+                    <div>
+                        <input type="range"/>
+                        <div></div>
+                    </div>
+                    <span>start</span>
+                    <span>end</span>
+                </div>
+                <div class="player-control">
+                    <div class="btn">
+                        <img src="music_player/Previous.svg">
+                    </div>
+                    <div class="btn">
+                        <img src="music_player/Play.svg">
+                    </div>
+                    <div class="btn">
+                        <img src="music_player/Next.svg">
+                    </div>
+                    <!--
+                    <i class="fas fa-backward" id="backward"></i>
+                <i class="fas fa-play" id="play-pause"></i>
+                <i class="fas fa-forward" id="forward"></i>
+                 -->
+
+                </div>
+                <div class="sound-control">
+                    <i class="fas fa-volume-down"></i>
+                    <input type="range" max="100" step="1" />
+                    <i class="fas fa-volume-up"></i>
+                </div>
+                <audio src="./music/2.mp3"></audio>
             </div>
-            <div class="link">
-                <div class="text">Projects</div>
-            </div>
-            <div class="link">
-                <div class="text">Art</div>
-            </div>
-            <div class="link">
-                <div class="text">Social</div>
-            </div>
-            <div class="link">
-                <div class="text">Setup</div>
-            </div>
-            <div class="link">
-                <div class="text">Help</div>
-            </div>
+
+
+
         </div>
-
-
-
-
     </div>
+
+
 </template>
 
 <style scoped>
-.btn {
-    position: fixed;
-    left: 0;
-    top: 0;
-}
 
-
-/* Effect 1: Slide in on top */
-.st-effect-1.st-menu {
-    visibility: visible;
-    -webkit-transform: translate3d(-100%, 0, 0);
-    transform: translate3d(-100%, 0, 0);
-}
 
 .container {
     mix-blend-mode: difference;
@@ -83,46 +85,199 @@ window.addEventListener('resize', () => {
     justify-content: center;
 }
 
-.link {
-    font-size: x-large;
-    font-weight: 300;
+
+.song-info {
+    margin-bottom: 10%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+
+.song-info img {
+    width: 50%;
+    border-radius: 50%;
+    margin-bottom: 10%;
+}
+
+.song-info .playing {
+    -webkit-animation: playRotate 6s infinite forwards linear;
+    animation: playRotate 6s infinite forwards linear;
+}
+
+.song-info h2 {
+    color: transparent;
+    background-image: -webkit-gradient(linear, left top, right top, from(#ff9966), to(#ff5e62));
+    background-image: linear-gradient(to right, #ff9966, #ff5e62);
+    -webkit-background-clip: text;
+    background-clip: text;
+    margin-bottom: 0.2rem;
+}
+
+.song-info h2,
+.song-info h3 {
+
+    font-weight: 400;
     text-align: center;
-    position: relative;
-    height: 40px;
-    margin-top: 10px;
-    overflow: hidden;
+}
+
+.song-info h3 {
+    font-size: 0.8rem;
+
+}
+
+.player {
+    min-height: 7vh;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
     width: 90%;
-    margin-left: 5%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.player div {
+    width: 100%;
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.player div div {
+    min-width: 100%;
+    min-height: 3px;
+    background-color: #adcaf2;
+    border-radius: 8px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+.player input {
+    width: 100%;
+    max-height: 3px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    border-radius: 8px;
+    -moz-appearance: none;
+    appearance: none;
+    outline: none;
+    background: #ff9966;
+    z-index: 0;
+    -webkit-transition: width 0.2s ease;
+    transition: width 0.2s ease;
+}
+
+.player input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #ff9966;
     cursor: pointer;
 }
 
-.link:after {
-    content: '';
-    position: absolute;
-    width: 80%;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-    bottom: 50%;
-    left: -100%;
-    transition-delay: all 0.5s;
-    transition: all 0.5s;
+.player span {
+
+    font-size: 0.8rem;
 }
 
-.link:hover:after,
-.link.hover:after {
-    left: 100%;
+.player-control {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: space-evenly;
+    max-height: 5%;
+    margin-bottom: 10%;
 }
 
-.link .text {
-    text-shadow: 0px -40px 0px rgba(255, 255, 255, 1);
-    transition: all 0.75s;
-    transform: translateY(100%) translateZ(0);
-    transition-delay: all 0.25s;
+
+.player-control i {
+    cursor: pointer;
+    margin: 0 1.5rem;
+    font-size: 1.3rem;
 }
 
-.link:hover .text,
-.link.hover .text {
-    text-shadow: 0px -40px 0px rgba(255, 255, 255, 0);
-    transform: translateY(0%) translateZ(0) scale(1.1);
-    font-weight: 600;
+.player-control .btn {
+    height: 100%;
+    width: 5%;
+    display: flex;
+}
+
+
+.sound-control {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    margin: 0.2rem auto;
+    width: 60%;
+}
+
+.sound-control input {
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    margin: 0 0.5rem;
+    max-height: 2px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: #adcaf2;
+    border-radius: 8px;
+    outline: none;
+}
+
+.sound-control input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #adcaf2;
+    cursor: pointer;
+}
+
+.sound-control i {
+    color: black;
 }
 </style>

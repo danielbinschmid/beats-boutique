@@ -65,7 +65,6 @@ onMounted(() => {
     computeSizes();
     if (contentContainer.value.childElementCount < nSections - 1) {
         missingSections.val = nSections - 1 - contentContainer.value.childElementCount;
-        console.log(missingSections.val)
     }
 
 });

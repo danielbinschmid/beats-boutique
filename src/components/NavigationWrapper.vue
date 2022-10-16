@@ -64,7 +64,6 @@ window.addEventListener('resize', () => {
                 <slot name="sidebar"></slot>
             </nav>
             <nav class="st-menu-2 st-effect-2" id="menu-2" :style="{width: isMobile.val ? '70vw':'30vw'}">
-                hello
                 <slot name="player"></slot>
             </nav>
 

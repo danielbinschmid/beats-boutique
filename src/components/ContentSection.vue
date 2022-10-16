@@ -21,7 +21,7 @@ if (probs.nRows != undefined) {
     nRows = probs.nRows;
 }
 
-console.log(nRows)
+
 
 
 

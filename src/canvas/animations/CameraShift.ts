@@ -37,7 +37,6 @@ export class CameraShift extends AnimationBase {
         if (newCur > 1) {
             this._camera.lookAt(this._endFixation);
         } else if (newCur <= 0) {
-            console.log("LOOK AT MINUS")
             this._camera.lookAt(this._startVec);
         }
         else {

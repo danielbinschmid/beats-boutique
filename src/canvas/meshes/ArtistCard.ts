@@ -126,8 +126,6 @@ export class ArtistCard extends MeshBase {
         this._cardMesh.scale.x = this._scaling.x;
         this._cardMesh.scale.y = this._scaling.y;
 
-        // console.log(renderer);
-        // rotatingText(renderer._scene, renderer);
         const loader = new FontLoader();
 
 

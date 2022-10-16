@@ -1,20 +1,29 @@
 <script setup lang="ts">
-import { onMounted, reactive } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import * as ui from "./uiSizeCalculation";
 
 
+const menuPoints = [
+    "Home",
+    "Projects",
+    "Art",
+    "Social",
+    "Help"
+]
+
+const menuRefs = ref([]);
+
+onMounted(() => {
+    const links: HTMLElement[] = menuRefs.value;
+    /**
+     * link.classList.remove("hover"); for removing hover
+     * link.classList.add("hover"); for adding hover
+     */
+
+})
 //For Demo only
-var links = document.getElementsByClassName('link')
-for (var i = 0; i <= links.length; i++)
-    addClass(i)
+// var links = document.getElementsByClassName('link')
 
-
-function addClass(id) {
-    setTimeout(function () {
-        if (id > 0) links[id - 1].classList.remove('hover')
-        links[id].classList.add('hover')
-    }, id * 750)
-}
 
 const isMobile = reactive({ val: ui.isMobile() });
 
@@ -26,25 +35,13 @@ window.addEventListener('resize', () => {
 <template>
     <div class="sidebar">
 
-        <div class="container" >
-            <div class="link">
-                <div class="text">Home</div>
+        <div class="container">
+            <div v-for="(item, i) in menuPoints" :key="i">
+                <div class="link" ref="menuRefs">
+                    <div class="text"> {{ item }}</div>
+                </div>
             </div>
-            <div class="link">
-                <div class="text">Projects</div>
-            </div>
-            <div class="link">
-                <div class="text">Art</div>
-            </div>
-            <div class="link">
-                <div class="text">Social</div>
-            </div>
-            <div class="link">
-                <div class="text">Setup</div>
-            </div>
-            <div class="link">
-                <div class="text">Help</div>
-            </div>
+
         </div>
 
 
@@ -54,19 +51,7 @@ window.addEventListener('resize', () => {
 </template>
 
 <style scoped>
-.btn {
-    position: fixed;
-    left: 0;
-    top: 0;
-}
 
-
-/* Effect 1: Slide in on top */
-.st-effect-1.st-menu {
-    visibility: visible;
-    -webkit-transform: translate3d(-100%, 0, 0);
-    transform: translate3d(-100%, 0, 0);
-}
 
 .container {
     mix-blend-mode: difference;

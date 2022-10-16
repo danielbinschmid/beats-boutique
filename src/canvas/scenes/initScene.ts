@@ -197,8 +197,6 @@ export function initScene(renderer: SceneRenderer) {
             const l = new AnimationLine(start, end, "c" + c + "b" + b, renderer);
             const lookat = new MeshLookAt([renderer._camera], tunnel.getCheckpointAt((nTunnelCheckpoints) * b + c - 0.5), tunnel.getCheckpointAt((nTunnelCheckpoints) * b + c + 0.5));
             l.addAnimation(lookat, {start: start, end: end}, "lookat " + c + " for beat " + b);
-
-            console.log(b * nTunnelCheckpoints + c);
         }   
 
         
