@@ -2,6 +2,8 @@
 import { ref, computed, onMounted, onBeforeMount, reactive, watch, WritableComputedRef, ComputedRef } from "vue";
 import AboutView from "@/views/AboutView.vue";
 import VueSection from "./ui_comps/VueSection.vue";
+import MenuSection from "./MenuSection.vue"
+import TitleSection from "./TitleSection.vue"
 import EntertainmentSection from "./EntertainmentSection.vue"
 import FillerSection from "./FillerSection.vue";
 import ContentSection from "./ContentSection.vue";
@@ -51,7 +53,8 @@ function computeSizes() {
 
 onBeforeMount(() => { });
 const refSection = ref(null);
-const contentContainer: { value: HTMLElement } = ref(null);
+const webglContent: {value: HTMLDivElement} = ref(null);
+const contentContainer: { value: HTMLDivElement } = ref(null);
 const headingFiller = ref(null);
 const nSections = window.nSections;
 const fillerFontSize = reactive({ val: '' })
@@ -61,24 +64,21 @@ const heightFillerTextDiv = reactive({ heightFillerTextDiv_ });
 const subtitleFontSize = reactive({ val: '' })
 const c = 'rgba(160, 255, 150, 0.5)'
 const missingSections = reactive({ val: 0 });
+const nWebglContentSections = 4;
 onMounted(() => {
     computeSizes();
-    if (contentContainer.value.childElementCount < nSections - 1) {
-        missingSections.val = nSections - 1 - contentContainer.value.childElementCount;
+    if (contentContainer.value.childElementCount + webglContent.value.childElementCount < nSections - 1) {
+        missingSections.val = nSections - 1 - contentContainer.value.childElementCount - webglContent.value.childElementCount;
     }
-
 });
 </script>
 
 <template>
     <div class="greetings">
         <div ref="contentContainer">
-            <section id="start1" ref="refSection"> </section>
-            <content-section
-                :msgs="['BEATS BOUTIQUE', '', 'Trap Beats & more' ,'', 'by prodbycctv', '', '', '', '', '']"
-                :n-rows="10" />
-            <entertainment-section :tracks="beatsMetadata2" />
-            <entertainment-section :tracks="beatsMetadata" />
+            <section id="section_Home" ref="refSection"> </section>
+            <title-section />
+            <menu-section id="section_Menu" />
 
 
 
@@ -90,8 +90,15 @@ onMounted(() => {
             <section> </section>
         </div>
 
+        <div ref="webglContent">
+            <div v-for="i in nWebglContentSections" :key="i">
+                <section :id="'webglContent_' + i" > </section>
+            </div>
+            
+        </div>
+
         <section>
-            <about />
+            <about id="section_About" />
         </section>
     </div>
 </template>

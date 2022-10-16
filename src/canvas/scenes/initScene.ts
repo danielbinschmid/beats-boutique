@@ -71,25 +71,21 @@ export function initScene(renderer: SceneRenderer) {
     // camera movements
     const endIntroMovement = 1;
 
-    const startMovementBehindDragon = 2.5;
-    const endMovementBehindDragon = 3;
 
-    const startMovementToDragon = 3;
-    const endMovementToDragon = 3.8;
+    const startMovementBehindDragon = 1.5;
+    const endMovementBehindDragon = 2;
 
-    const startTunnelMovement = 4;
-    const endTunnelMovement = 11;
+    const startMovementToDragon = 2;
+    const endMovementToDragon = 2.8;
+
+    const startTunnelMovement = 3;
 
     // lookats
-    const endLookAtDragon = 3;
-    const endLookAtTunnel = 3.8;
+    const endLookAtDragon = 2;
+    const endLookAtTunnel = 2.8;
 
-    const endDragonLookAtInitial = 3;
-    const endDragonLookAtTunnel = 3.8;
-
-    // cam. fov
-    // const zoomOut = { start: 4, end: startTunnelMovement };
-   //  const zoomIn = { start: endTunnelMovement - 0.5, end: endTunnelMovement };
+    const endDragonLookAtInitial = 2;
+    const endDragonLookAtTunnel = 2.8;
 
 
     const tunnelMovementDuration = 1;

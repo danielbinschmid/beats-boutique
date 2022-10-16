@@ -1,9 +1,53 @@
 <script setup lang="ts">
-import { onMounted, reactive } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import * as ui from "./uiSizeCalculation";
 
+onMounted(() => {
 
+    audio.value.onloadedmetadata = () => {
+        durationSlider.value.value = "" + audio.value.currentTime;
+        durationSlider.value.setAttribute("max", "" + audio.value.duration);
+        startTimeAudio.value = timeFormat(audio.value.currentTime);
+        endTimeAudio.value = timeFormat(audio.value.duration);
+        audio.value.ontimeupdate = () => {
+            durationSlider.value.value = "" + audio.value.currentTime;
+            startTimeAudio.value = timeFormat(audio.value.currentTime);
+            progressBar.value.style.left = `${(audio.value.currentTime / audio.value.duration) * 100}%`
+        }
 
+    }
+
+})
+
+//format current/duration time
+function timeFormat(time) {
+    return Math.floor(time / 60) + ":" + ("0" + Math.floor(time % 60)).slice(-2);
+}
+
+const startTimeAudio = reactive({ value: "0" });
+const endTimeAudio = reactive({ value: "1" });
+const audio: { value: HTMLAudioElement } = ref(null);
+const durationSlider: { value: HTMLInputElement } = ref(null);
+const progressBar: { value: HTMLElement } = ref(null);
+
+const svgPrefix = "music_player/"
+const svgSources = {
+    play: svgPrefix + "Play.svg",
+    pause: svgPrefix + "Pause.svg"
+}
+const playBtnSrc = reactive({ value: svgSources.play });
+
+const isPlaying = reactive({ value: false });
+function play() {
+    if (isPlaying.value) {
+        audio.value.pause();
+        playBtnSrc.value = svgSources.play;
+    } else {
+        audio.value.play();
+        playBtnSrc.value = svgSources.pause;
+    }
+    isPlaying.value = !isPlaying.value;
+}
 
 const isMobile = reactive({ val: ui.isMobile() });
 
@@ -18,9 +62,6 @@ window.addEventListener('resize', () => {
         <div class="container">
             <div>
                 <div class="song-info">
-                    <img src="https://chillhop.com/wp-content/uploads/2020/09/0255e8b8c74c90d4a27c594b3452b2daafae608d-1024x1024.jpg"
-                        alt="" />
-
                     <div>
                         <h2>Quran</h2>
                         <h3>Hakim Omari</h3>
@@ -28,19 +69,21 @@ window.addEventListener('resize', () => {
                 </div>
                 <div class="player">
                     <div>
-                        <input type="range"/>
-                        <div></div>
+                        <input type="range" ref="durationSlider" />
+                        <div ref="progressBar"></div>
                     </div>
-                    <span>start</span>
-                    <span>end</span>
+                    <span>{{ startTimeAudio.value}}</span>
+                    <span>{{endTimeAudio.value}}</span>
                 </div>
                 <div class="player-control">
                     <div class="btn">
                         <img src="music_player/Previous.svg">
                     </div>
-                    <div class="btn">
-                        <img src="music_player/Play.svg">
-                    </div>
+                    <button type="button" :onclick="play" button-name="Play music">
+
+                        <img :src="playBtnSrc.value">
+
+                    </button>
                     <div class="btn">
                         <img src="music_player/Next.svg">
                     </div>
@@ -56,7 +99,7 @@ window.addEventListener('resize', () => {
                     <input type="range" max="100" step="1" />
                     <i class="fas fa-volume-up"></i>
                 </div>
-                <audio src="./music/2.mp3"></audio>
+                <audio src="./music/2.mp3" ref="audio" preload="metadata"></audio>
             </div>
 
 
@@ -68,8 +111,6 @@ window.addEventListener('resize', () => {
 </template>
 
 <style scoped>
-
-
 .container {
     mix-blend-mode: difference;
     width: 100%;
@@ -180,30 +221,7 @@ window.addEventListener('resize', () => {
     pointer-events: none;
 }
 
-.player input {
-    width: 100%;
-    max-height: 3px;
-    cursor: pointer;
-    -webkit-appearance: none;
-    border-radius: 8px;
-    -moz-appearance: none;
-    appearance: none;
-    outline: none;
-    background: #ff9966;
-    z-index: 0;
-    -webkit-transition: width 0.2s ease;
-    transition: width 0.2s ease;
-}
 
-.player input::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    background: #ff9966;
-    cursor: pointer;
-}
 
 .player span {
 
@@ -235,7 +253,24 @@ window.addEventListener('resize', () => {
     height: 100%;
     width: 5%;
     display: flex;
+
 }
+
+
+
+.player-control button {
+    cursor: pointer;
+    display: inline-block;
+    width: 10%;
+    height: 80%;
+    background: rgba(0, 0, 0, 0);
+    border-width: 0;
+}
+
+.player-control button:hover {
+    background: rgba(0, 0, 0, 0.5);
+}
+
 
 
 .sound-control {
@@ -274,6 +309,31 @@ window.addEventListener('resize', () => {
     height: 10px;
     border-radius: 50%;
     background: #adcaf2;
+    cursor: pointer;
+}
+
+.player input {
+    width: 100%;
+    max-height: 3px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    border-radius: 8px;
+    -moz-appearance: none;
+    appearance: none;
+    outline: none;
+    background: #ff9966;
+    z-index: 0;
+    -webkit-transition: width 0.2s ease;
+    transition: width 0.2s ease;
+}
+
+.player input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #ff9966;
     cursor: pointer;
 }
 

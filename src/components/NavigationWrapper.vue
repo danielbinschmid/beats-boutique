@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import * as ui from "./uiSizeCalculation";
 /* 
 Inspired from: https://tympanus.net/codrops/2013/08/28/transitions-for-off-canvas-navigations/
@@ -11,20 +11,20 @@ as they do not animate back gracefully
 https://codepen.io/kyunwang/pen/zNOoxb
 */
 
+
+const menuBtn: {value: HTMLButtonElement} = ref(null);
+const playerBtn: {value: HTMLButtonElement} = ref(null);
 onMounted(() => {
-    var click = document.querySelectorAll('div button');
     var menu = document.querySelector('#st-container');
     var pusher = document.querySelector('.st-pusher');
     // to store the corresponding effect
     var effect;
 
+    menuBtn.value.onclick = addClass;
+    playerBtn.value.onclick = addClass;
     // adding a click event to all the buttons
-    for (var i = 0; i < click.length; i++) {
-        click[i].addEventListener('click', addClass)
-    }
 
     pusher.addEventListener('click', closeMenu);
-
 
 
     function addClass(e) {
@@ -71,13 +71,13 @@ window.addEventListener('resize', () => {
                 <slot name="content"></slot>
 
                 <div id="st-trigger-effects" class="menu-btn">
-                    <button data-effect="st-effect-1" class="btn" type="button">
+                    <button data-effect="st-effect-1" class="btn" type="button" ref="menuBtn">
                         <img src="menu.svg" class="svg">
                     </button>
                 </div>
 
                 <div id="st-trigger-effects" class="player-btn">
-                    <button data-effect="st-effect-2" class="btn" type="button">
+                    <button data-effect="st-effect-2" class="btn" type="button" ref="playerBtn">
                         <img src="player.svg" class="svg">
                     </button>
                 </div>

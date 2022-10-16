@@ -1,20 +1,34 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue';
 import * as ui from "./uiSizeCalculation";
+import { gsap, Linear } from "gsap";
+const nWebglContentSections = 4;
+const sectionNames = ["Beats", "Samples", "Artists", "Releases"]
 
+function scrollTo(target: number) {
+    const targetID = "webglContent_" + target;
+    gsap.to(window, {duration: 2, scrollTo: "#" + targetID});
 
-const menuPoints = [
-    "Home",
-    "Projects",
-    "Art",
-    "Social",
-    "Help"
+}
+
+const menuAfterContent = [
+    "About"
 ]
 
-const menuRefs = ref([]);
+const menuBeforeContent = [
+    "Home",
+    "Menu"
+]
+
+function scrollToSection(target: string) {
+    const targetID = "section_" + target;
+    gsap.to(window, {duration: 2, scrollTo: "#" + targetID});
+}
+
+// const menuRefs = ref([]);
 
 onMounted(() => {
-    const links: HTMLElement[] = menuRefs.value;
+    // const links: HTMLElement[] = menuRefs.value;
     /**
      * link.classList.remove("hover"); for removing hover
      * link.classList.add("hover"); for adding hover
@@ -36,8 +50,20 @@ window.addEventListener('resize', () => {
     <div class="sidebar">
 
         <div class="container">
-            <div v-for="(item, i) in menuPoints" :key="i">
-                <div class="link" ref="menuRefs">
+            <div v-for="(item, i) in menuBeforeContent" :key="i">
+                <div class="link" @click="scrollToSection(item)">
+                    <div class="text"> {{ item }}</div>
+                </div>
+            </div>
+            <hr />
+            <div v-for="(item, i) in sectionNames" :key="item">
+                <div class="link" @click="scrollTo(i + 1)">
+                    <div class="text" > {{ item }}</div>
+                </div>
+            </div>
+            <hr />
+            <div v-for="(item, i) in menuAfterContent" :key="i">
+                <div class="link" @click="scrollToSection(item)">
                     <div class="text"> {{ item }}</div>
                 </div>
             </div>
@@ -51,7 +77,9 @@ window.addEventListener('resize', () => {
 </template>
 
 <style scoped>
-
+hr {
+    margin: 10%
+}
 
 .container {
     mix-blend-mode: difference;

@@ -63,3 +63,9 @@ npm run lint
 - Precompute tunnel ring rotation
 - bake lookAts to rotations
 - change movement direction of dragon rings or stop ring movement on scroll
+
+
+## Ideas:
+- Dragon comes with you, but then fades
+
+npm WARN deprecated three-gltf-loader@1.111.0: Starting with three.js r103, GLTFLoader is included in the three package itself and installing three-gltf-loader is no longer necessary. It can be imported from 'three/examples/jsm/loaders/GLTFLoader'

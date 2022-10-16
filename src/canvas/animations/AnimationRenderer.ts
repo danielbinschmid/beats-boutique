@@ -1,6 +1,6 @@
 import { gsap, Linear } from "gsap";
 import * as gsap_ from "gsap";
-import { ScrollTrigger } from "gsap/all";
+import { ScrollToPlugin, ScrollTrigger } from "gsap/all";
 import { SceneRenderer } from "../scenes/SceneRenderer";
 export class AnimationRenderer {
 	_timeline: gsap.core.Timeline;
@@ -8,6 +8,7 @@ export class AnimationRenderer {
     _progress: number;
 	constructor() {
 		//runtime
+        gsap.registerPlugin(ScrollToPlugin)
 		gsap.registerPlugin(ScrollTrigger);
 		// const timelineVars: GSAPTimelineVars = {}
 		// const scrollTriggerVars: ScrollTrigger.Vars = {};
@@ -18,10 +19,9 @@ export class AnimationRenderer {
 			defaults: { duration: 1 },
 			duration: window.nSections - 1,
 			scrollTrigger: {
-				trigger: "start1",
 				scrub: true,
                 snap: {
-                    snapTo: [0, factor, 2 * factor, 3 * factor, 5 * factor, 6 * factor, 7 * factor, 8 * factor, 9 * factor, 10 * factor],
+                    snapTo: [0, factor, 2 * factor, 3.5 * factor, 5 * factor, 6 * factor, 7 * factor, 8 * factor, 9 * factor],
                     duration: 1,
                     directional: true,
                     ease: "power1"
