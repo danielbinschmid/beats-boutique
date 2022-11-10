@@ -1,6 +1,11 @@
-# G-Stuff-Only
+# Beats Boutique
 
-This template should help get you started developing with Vue 3 in Vite.
+## Description
+Repository contains a Three.js+Vue website prototype for
+uploading, browsing, and buying music instrumentals. 
+See below for how-to run the website locally. Project 
+is in an unfinished state and is not optmized for every 
+browser and mobile yet.
 
 ## Recommended IDE Setup
 
