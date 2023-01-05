@@ -30,7 +30,7 @@ const audio: { value: HTMLAudioElement } = ref(null);
 const durationSlider: { value: HTMLInputElement } = ref(null);
 const progressBar: { value: HTMLElement } = ref(null);
 
-const svgPrefix = "music_player/"
+const svgPrefix = "/music_player/"
 const svgSources = {
     play: svgPrefix + "Play.svg",
     pause: svgPrefix + "Pause.svg"
@@ -77,7 +77,7 @@ window.addEventListener('resize', () => {
                 </div>
                 <div class="player-control">
                     <div class="btn">
-                        <img src="music_player/Previous.svg">
+                        <img src="/music_player/Previous.svg">
                     </div>
                     <button type="button" :onclick="play" button-name="Play music">
 
@@ -85,7 +85,7 @@ window.addEventListener('resize', () => {
 
                     </button>
                     <div class="btn">
-                        <img src="music_player/Next.svg">
+                        <img src="/music_player/Next.svg">
                     </div>
                     <!--
                     <i class="fas fa-backward" id="backward"></i>

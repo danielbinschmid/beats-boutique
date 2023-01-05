@@ -72,13 +72,13 @@ window.addEventListener('resize', () => {
 
                 <div id="st-trigger-effects" class="menu-btn">
                     <button data-effect="st-effect-1" class="btn" type="button" ref="menuBtn">
-                        <img src="menu.svg" class="svg">
+                        <img src="/menu.svg" class="svg">
                     </button>
                 </div>
 
                 <div id="st-trigger-effects" class="player-btn">
                     <button data-effect="st-effect-2" class="btn" type="button" ref="playerBtn">
-                        <img src="player.svg" class="svg">
+                        <img src="/player.svg" class="svg">
                     </button>
                 </div>
                 <hr />
